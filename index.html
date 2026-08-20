@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worksheet Digital: Pengumpulan Data Pengujian CVT Transaxle</title>
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -19,32 +14,39 @@
                     colors: {
                         pastel: {
                             pink: '#FFD1DC',
-                            mint: '#BFFCC6',
-                            blue: '#C5E3F6',
-                            yellow: '#FFF5BA',
-                            purple: '#E8DFF5',
-                            orange: '#FFDFD3',
-                            card: '#FAFAFD',
-                            dark: '#4A4E69'
-                        },
-                        auto: {
-                            accent: '#5C6BC0',
-                            danger: '#FF6B6B',
-                            success: '#51CF66',
-                            warning: '#FCC419'
+                            pinkDark: '#FF9EAA',
+                            mint: '#D4F0F0',
+                            mintDark: '#86E3CE',
+                            blue: '#CCE2FF',
+                            blueDark: '#80B3FF',
+                            yellow: '#FFF3CD',
+                            yellowDark: '#FFE699',
+                            purple: '#E2F0CB',
+                            lavender: '#E8DFF5',
+                            lavenderDark: '#CBB2FE',
+                            bg: '#F9F8FD',
+                            card: '#FFFFFF',
+                            text: '#4A4A68'
                         }
                     },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        kawaii: ['Fredoka', 'cursive'],
-                        hand: ['Caveat', 'cursive']
+                        sans: ['Quicksand', 'sans-serif'],
+                        handwritten: ['Caveat', 'cursive']
                     }
                 }
             }
         }
     </script>
     
-    <!-- Third Party Libraries for PDF & Confetti -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries for PDF Export & Confetti -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -52,73 +54,82 @@
     <style>
         body {
             background-color: #F4F6FB;
-            background-image: radial-gradient(#E2E8F0 1.5px, transparent 1.5px);
-            background-size: 24px 24px;
-            user-select: none;
-            -webkit-user-select: none;
+            color: #334155;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none; /* Anti-copy safeguard */
         }
 
-        .no-select {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
+        /* Glassmorphism & Soft Card Shadows */
         .kawaii-card {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
             border: 2px solid #E2E8F0;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            transition: all 0.2s ease-in-out;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.15), 0 8px 10px -6px rgba(148, 163, 184, 0.1);
+            transition: all 0.25s ease;
         }
 
         .kawaii-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px -5px rgba(92, 107, 192, 0.12);
+            border-color: #CBD5E1;
         }
 
         .option-btn {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #E2E8F0;
+            transition: all 0.2s ease;
+            background-color: #FFFFFF;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #93C5FD;
+            background-color: #EFF6FF;
+            transform: translateY(-2px);
         }
 
         .option-btn.selected {
-            background-color: #E8DFF5;
-            border-color: #7B61FF;
-            color: #2B1810;
-            transform: scale(1.01);
+            border-color: #3B82F6;
+            background-color: #DBEAFE;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        /* Digital Stamp Effect */
+        .option-btn.correct-highlight {
+            border-color: #22C55E !important;
+            background-color: #DCFCE7 !important;
+            color: #15803D !important;
+            font-weight: 700;
+        }
+
+        .option-btn.wrong-highlight {
+            border-color: #EF4444 !important;
+            background-color: #FEE2E2 !important;
+            color: #B91C1C !important;
+        }
+
+        /* Teacher Rubber Stamp Effect */
         .stamp-box {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 0.75rem 1.5rem;
             text-transform: uppercase;
             font-weight: 800;
-            border-radius: 8px;
-            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="black" opacity="0.9"/></svg>');
+            border-radius: 0.75rem;
+            border: 4px stroke;
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="black" opacity="0.95"/></svg>');
             transform: rotate(-6deg);
-            letter-spacing: 1px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .stamp-trampil {
-            color: #2b8a3e;
-            border: 4px solid #2b8a3e;
-            background: rgba(211, 249, 216, 0.4);
-            box-shadow: 0 0 0 2px #2b8a3e;
+            color: #16A34A;
+            border: 4px dashed #16A34A;
+            background-color: rgba(220, 252, 231, 0.85);
         }
 
         .stamp-belum {
-            color: #c92a2a;
-            border: 4px solid #c92a2a;
-            background: rgba(255, 201, 201, 0.4);
-            box-shadow: 0 0 0 2px #c92a2a;
+            color: #DC2626;
+            border: 4px dashed #DC2626;
+            background-color: rgba(254, 226, 226, 0.85);
         }
 
-        /* Dynamic Watermark */
-        #watermark-overlay {
+        /* Dynamic Watermark Background */
+        #watermarkContainer {
             position: fixed;
             top: 0;
             left: 0;
@@ -129,13 +140,18 @@
             opacity: 0.04;
             display: flex;
             flex-wrap: wrap;
-            align-content: space-around;
             justify-content: space-around;
+            align-content: space-around;
             overflow: hidden;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #000;
-            transform: rotate(-25deg);
+        }
+
+        /* Score Handwriting Font */
+        .score-handwritten {
+            font-family: 'Caveat', cursive;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.08);
         }
 
         /* Custom Scrollbar */
@@ -150,1263 +166,1250 @@
             border-radius: 4px;
         }
 
-        @keyframes pulse-soft {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+        /* Word Bank Chips */
+        .word-chip {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
         }
-
-        .animate-pulse-soft {
-            animation: pulse-soft 2s infinite ease-in-out;
+        .word-chip:hover {
+            transform: scale(1.05);
+        }
+        .word-chip.used {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
         }
     </style>
 </head>
-<body class="text-slate-800 font-sans leading-relaxed pb-16">
+<body class="min-h-screen pb-12 relative">
 
-    <!-- DYNAMIC WATERMARK CONTAINER -->
-    <div id="watermark-overlay"></div>
+    <!-- Dynamic Watermark Container -->
+    <div id="watermarkContainer"></div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="max-w-4xl mx-auto px-4 pt-6">
+    <!-- Notification / Warning Toast Banner -->
+    <div id="toastNotification" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 hidden transition-all duration-300 w-11/12 max-w-md">
+        <div id="toastContent" class="bg-amber-500 text-white font-bold px-5 py-3 rounded-2xl shadow-xl flex items-center justify-between gap-3 border-2 border-amber-300">
+            <span id="toastMessage" class="text-sm">⚠️ Amaran Anti-Cheat</span>
+            <button onclick="hideToast()" class="text-white hover:text-amber-100 text-lg">&times;</button>
+        </div>
+    </div>
 
-        <!-- HEADER APLIKASI -->
-        <header class="kawaii-card rounded-3xl p-6 mb-6 bg-gradient-to-r from-pastel-purple via-pastel-blue to-pastel-mint border-2 border-white text-center relative overflow-hidden">
-            <div class="flex flex-wrap justify-center items-center gap-3 mb-3">
-                <span class="bg-white/80 px-3 py-1 rounded-full text-xs font-bold text-indigo-700 tracking-wider uppercase shadow-sm">
-                    🚗 TEKNOLOGI AUTOMOTIF TVET
-                </span>
-                <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-sm">
-                    ⚙️ CVT TRANSAXLE DIAGNOSTIC
-                </span>
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white py-6 px-4 shadow-lg mb-6 rounded-b-3xl relative overflow-hidden">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-white/30">
+                    🚗
+                </div>
+                <div>
+                    <span class="bg-white/20 text-xs uppercase px-3 py-1 rounded-full font-bold tracking-wider border border-white/30">
+                        BENGKEL: TEKNOLOGI AUTOMOTIF
+                    </span>
+                    <h1 class="text-xl md:text-2xl font-bold mt-1 text-white drop-shadow">
+                        PENGUMPULAN DATA PENGUJIAN CVT TRANSAXLE
+                    </h1>
+                    <p class="text-xs text-blue-100 mt-0.5">Kod Unit: STAS03/23-33-01-C09/KP(1/2) | Single-Page Interactive Worksheet</p>
+                </div>
             </div>
             
-            <h1 class="text-2xl md:text-3xl font-kawaii font-bold text-slate-800 tracking-wide mb-1">
-                BENGKEL: TEKNOLOGI AUTOMOTIF
-            </h1>
-            <h2 class="text-base md:text-lg font-bold text-indigo-900 mb-4">
-                TAJUK TUGASAN: PENGUMPULAN DATA PENGUJIAN CVT TRANSAXLE
-            </h2>
-
-            <!-- Minimalist Automotive Icons Banner -->
-            <div class="flex justify-center items-center gap-4 md:gap-8 text-2xl text-slate-700 bg-white/60 py-2 px-6 rounded-2xl max-w-fit mx-auto border border-white/80 shadow-inner">
-                <span title="Cakera Brek">💿</span>
-                <span title="Tayar">🛞</span>
-                <span title="Kereta Automotif">🚗</span>
-                <span title="Spanar / Tools">🔧</span>
-                <span title="Simbol ABS">🛑</span>
-                <span title="CVT Transaxle">⚙️</span>
-            </div>
-
-            <!-- Action Bar Top Right -->
-            <div class="absolute top-4 right-4 flex gap-2">
-                <button onclick="toggleTeacherModal()" class="bg-white/80 hover:bg-white text-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm border border-slate-200">
-                    ⚙️ <span class="hidden md:inline">Tetapan Guru</span>
+            <div class="flex items-center gap-2">
+                <button id="btnTeacherSettings" onclick="openTeacherModal()" class="bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-2 rounded-xl border border-white/30 backdrop-blur-sm transition flex items-center gap-2 font-semibold">
+                    <i class="fa-solid fa-gear"></i> Tetapan Guru
+                </button>
+                <button id="btnToggleFullscreen" onclick="toggleFullscreen()" class="bg-white/20 hover:bg-white/30 text-white text-xs px-3 py-2 rounded-xl border border-white/30 backdrop-blur-sm transition flex items-center gap-2 font-semibold">
+                    <i class="fa-solid fa-expand"></i> Skrin Penuh
                 </button>
             </div>
-        </header>
-
-        <!-- STATUS INTEGRITI AMARAN ANTI-CHEAT (BANNER) -->
-        <div id="antiCheatBanner" class="hidden mb-6 bg-amber-50 border-2 border-amber-300 text-amber-900 p-4 rounded-2xl shadow-sm flex items-start gap-3">
-            <span class="text-2xl">⚠️</span>
-            <div class="flex-1">
-                <h4 class="font-bold text-sm">AMARAN INTEGRITI BROWSER (<span id="warningCountText">0</span>/3)</h4>
-                <p id="warningDetailText" class="text-xs text-amber-800 mt-0.5">Aktiviti keluar dari halaman tugasan dikesan. Sila kekal pada lembaran tugasan ini.</p>
-            </div>
         </div>
+        
+        <!-- Decorative subtle background shapes -->
+        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute left-10 -top-8 w-24 h-24 bg-purple-300/20 rounded-full blur-lg pointer-events-none"></div>
+    </header>
 
-        <!-- MAKLUMAT PELAJAR & START EXAM CARD -->
-        <section id="studentCardSection" class="kawaii-card rounded-3xl p-6 mb-6 border-2 border-indigo-100">
-            <div class="flex items-center gap-2 mb-4">
-                <span class="bg-pastel-pink text-pink-700 p-2 rounded-xl text-lg">📝</span>
-                <h3 class="font-kawaii text-xl font-bold text-slate-800">MAKLUMAT PELAJAR</h3>
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 space-y-6">
+
+        <!-- STUDENT INFORMATION CARD -->
+        <section class="kawaii-card p-6 border-l-8 border-l-blue-400">
+            <div class="flex items-center justify-between mb-4 border-b pb-3">
+                <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-blue-500"></i> MAKLUMAT PELAJAR
+                </h2>
+                <span id="sessionStatusBadge" class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-300">
+                    🔒 BELUM DIMULAKAN
+                </span>
             </div>
 
-            <form id="studentForm" onsubmit="event.preventDefault(); startExamSession();" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">NAMA PELAJAR <span class="text-red-500">*</span></label>
-                    <input type="text" id="inputNama" required placeholder="Contoh: MUHAMMAD AMIRUL" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:border-indigo-400 focus:outline-none text-sm font-semibold transition bg-slate-50 focus:bg-white">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Nama Pelajar <span class="text-red-500">*</span></label>
+                    <input type="text" id="studentName" placeholder="Contoh: MUHAMMAD HAZIQ BIN AZMAN" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm uppercase bg-slate-50 font-semibold text-slate-700">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">NO. KP / NO. NDP <span class="text-red-500">*</span></label>
-                    <input type="text" id="inputNDP" required placeholder="Contoh: 040512-12-5432" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:border-indigo-400 focus:outline-none text-sm font-semibold transition bg-slate-50 focus:bg-white">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">No. Kad Pengenalan / NDP <span class="text-red-500">*</span></label>
+                    <input type="text" id="studentId" placeholder="Contoh: 040512-12-5431 / NDP202410" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold text-slate-700">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">KEKERAPAN PENILAIAN <span class="text-red-500">*</span></label>
-                    <select id="inputPenilaian" class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:border-indigo-400 focus:outline-none text-sm font-semibold transition bg-slate-50 focus:bg-white">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Kekerapan Penilaian <span class="text-red-500">*</span></label>
+                    <select id="assessmentFrequency" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold text-slate-700 bg-white">
                         <option value="Penilaian Utama">Penilaian Utama</option>
                         <option value="Ulangnilai 1">Ulangnilai 1</option>
                         <option value="Ulangnilai 2">Ulangnilai 2</option>
                         <option value="Ulangnilai 3">Ulangnilai 3</option>
                         <option value="Ulangnilai 4">Ulangnilai 4</option>
-                        <option value="Ulangnilai 5">Ulangnilai 5</option>
                     </select>
                 </div>
-
-                <div class="md:col-span-3 flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 mt-2">
-                    <div class="flex items-center gap-4 text-xs font-medium text-slate-500">
-                        <span id="timerDisplay" class="font-mono bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-bold text-slate-700">⏱️ MASA: --:--</span>
-                        <button type="button" onclick="toggleFullscreen()" class="hover:text-indigo-600 underline">🖥️ Mod Skrin Penuh</button>
-                    </div>
-
-                    <button type="submit" id="btnStartExam" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-2xl shadow-lg hover:shadow-indigo-200 transition transform active:scale-95 flex items-center justify-center gap-2">
-                        🔒 MULAKAN TUGASAN
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- PROGRESS & SCORE DISPLAY BANNER (AFTER SUBMIT & DURING EXAM) -->
-        <div id="stickyProgressContainer" class="sticky top-4 z-30 mb-6 hidden">
-            <div class="kawaii-card rounded-2xl p-4 bg-white/95 shadow-md border-2 border-indigo-200 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="w-full md:w-1/2">
-                    <div class="flex justify-between items-center text-xs font-bold mb-1 text-slate-600">
-                        <span>KEMAJUAN MENJAWAB</span>
-                        <span id="progressPercent">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-3.5 border border-slate-200 overflow-hidden">
-                        <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-pastel-purple h-3.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 text-xs font-bold text-slate-700">
-                    <span id="answeredCountBadge" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl border border-indigo-100">
-                        Dijawab: 0 / 30 Soalan
-                    </span>
-                    <span id="sessionStatusBadge" class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-xl border border-emerald-100">
-                        🔒 MOD TUGASAN AKTIF
-                    </span>
-                </div>
             </div>
-        </div>
 
-        <!-- RESULTS OVERVIEW CARD (DISPLAYED AFTER SUBMISSION) -->
-        <section id="resultsSection" class="hidden kawaii-card rounded-3xl p-6 mb-8 border-4 border-indigo-200 bg-white relative overflow-hidden">
-            <div class="text-center">
-                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest">
-                    HASIL KEPUTUSAN PENILAIAN
-                </span>
-
-                <!-- BIG SCORE CIRCLE (TEACHER HANDWRITTEN STYLE) -->
-                <div class="my-6 relative flex justify-center items-center">
-                    <div class="w-44 h-44 rounded-full border-8 border-pink-300 bg-pastel-yellow/40 flex flex-col items-center justify-center shadow-xl transform -rotate-3 relative z-10">
-                        <span class="font-hand text-5xl font-bold text-red-600 leading-none" id="scoreHandwritten">
-                            0 / 30
-                        </span>
-                        <span id="scorePercentText" class="font-kawaii text-sm font-bold text-indigo-900 mt-1">
-                            0%
-                        </span>
-                    </div>
+            <!-- Start Exam / Timer Bar -->
+            <div id="startExamBar" class="mt-5 pt-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="text-xs text-slate-500 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-blue-400"></i>
+                    <span>Sila isi nama & NDP sebelum memulakan tugasan. Masa akan direkodkan.</span>
                 </div>
-
-                <!-- STIKER PENCAPAIAN TRAMPIL / BELUM TRAMPIL -->
-                <div id="achievementStickerContainer" class="mb-4">
-                    <!-- Dynamic Sticker inserted here -->
-                </div>
-
-                <!-- DIGITAL STAMP PENILAI -->
-                <div class="my-4 flex flex-col items-center justify-center">
-                    <div id="digitalStampBox" class="stamp-box stamp-trampil text-center">
-                        <div class="text-xs font-black tracking-widest" id="stampEvaluatorName">PEGAWAI PENILAI: AZRYZAN BESRI</div>
-                        <div class="text-sm font-bold mt-0.5" id="stampStatusText">STATUS: TRAMPIL</div>
-                    </div>
-                    <div class="text-xs font-semibold text-slate-500 mt-3" id="timestampText">
-                        Tarikh Semakan: -- | Masa: --
-                    </div>
-                </div>
-
-                <!-- INTEGRITY LOG SUMMARY CARD -->
-                <div id="integritySummaryCard" class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left max-w-lg mx-auto text-xs">
-                    <h5 class="font-bold text-slate-700 mb-2 flex items-center gap-1.5">
-                        🔐 STATUS INTEGRITI TUGASAN
-                    </h5>
-                    <div class="grid grid-cols-2 gap-2 text-slate-600" id="integrityDetails">
-                        <div>Status: <span class="font-bold text-emerald-600">🟢 BERSAHANJA</span></div>
-                        <div>Keluar Halaman: <span class="font-bold">0 kali</span></div>
-                        <div>Copy / Paste: <span class="font-bold">0 kali</span></div>
-                        <div>Masa Diambil: <span class="font-bold">0 minit</span></div>
-                    </div>
-                </div>
-
-                <!-- BUTTONS FOR PDF & GOOGLE CLASSROOM -->
-                <div class="mt-6 flex flex-wrap justify-center gap-4">
-                    <button onclick="exportToPDF()" id="btnDownloadPDF" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md transition flex items-center gap-2">
-                        📄 MUAT TURUN PDF
-                    </button>
-
-                    <button onclick="openGoogleClassroom()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md transition flex items-center gap-2">
-                        🏫 HANTAR KE GOOGLE CLASSROOM
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- WORKSHEET QUESTIONS FORM -->
-        <main id="worksheetArea" class="space-y-8 opacity-50 pointer-events-none transition-all duration-300">
-
-            <!-- BAHAGIAN A: ANEKA PILIHAN (20 MARKAH) -->
-            <section class="kawaii-card rounded-3xl p-6 border-2 border-purple-100">
-                <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <span class="bg-pastel-purple text-purple-800 p-2 rounded-xl text-lg font-bold">A</span>
-                        <div>
-                            <h3 class="font-kawaii text-lg font-bold text-slate-800">BAHAGIAN A — ANEKA PILIHAN</h3>
-                            <p class="text-xs text-slate-500">Pilih SATU jawapan yang paling tepat bagi setiap soalan. (20 Soalan / 20 Markah)</p>
-                        </div>
-                    </div>
-                    <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">20 MARKAH</span>
-                </div>
-
-                <div id="containerBahagianA" class="space-y-6">
-                    <!-- MCQ Questions injected dynamically -->
-                </div>
-            </section>
-
-            <!-- BAHAGIAN B: BENAR / SALAH (5 MARKAH) -->
-            <section class="kawaii-card rounded-3xl p-6 border-2 border-mint-100">
-                <div class="flex items-center justify-between mb-6 pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <span class="bg-pastel-mint text-emerald-800 p-2 rounded-xl text-lg font-bold">B</span>
-                        <div>
-                            <h3 class="font-kawaii text-lg font-bold text-slate-800">BAHAGIAN B — BENAR ATAU SALAH</h3>
-                            <p class="text-xs text-slate-500">Tentukan sama ada kenyataan berikut BENAR atau SALAH. (5 Soalan / 5 Markah)</p>
-                        </div>
-                    </div>
-                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">5 MARKAH</span>
-                </div>
-
-                <div id="containerBahagianB" class="space-y-6">
-                    <!-- TF Questions injected dynamically -->
-                </div>
-            </section>
-
-            <!-- BAHAGIAN C: ISI TEMPAT KOSONG (5 MARKAH) -->
-            <section class="kawaii-card rounded-3xl p-6 border-2 border-blue-100">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <span class="bg-pastel-blue text-blue-800 p-2 rounded-xl text-lg font-bold">C</span>
-                        <div>
-                            <h3 class="font-kawaii text-lg font-bold text-slate-800">BAHAGIAN C — ISI TEMPAT KOSONG</h3>
-                            <p class="text-xs text-slate-500">Pilih perkataan dari Word Bank untuk mengisi ruang kosong. (5 Soalan / 5 Markah)</p>
-                        </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">5 MARKAH</span>
-                </div>
-
-                <!-- WORD BANK CARD -->
-                <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-pastel-yellow/60 via-pastel-orange/40 to-pastel-pink/40 border-2 border-dashed border-amber-300">
-                    <div class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
-                        <span>🏷️ WORD BANK (Klik perkataan untuk dimasukkan ke dalam ruang kosong aktif)</span>
-                    </div>
-                    <div id="wordBankContainer" class="flex flex-wrap gap-2">
-                        <!-- Word Bank tags injected here -->
-                    </div>
-                </div>
-
-                <div id="containerBahagianC" class="space-y-6">
-                    <!-- Fill In Blank Questions injected dynamically -->
-                </div>
-            </section>
-
-            <!-- ACTION SUBMIT BUTTON -->
-            <div class="kawaii-card rounded-3xl p-6 text-center border-2 border-indigo-200 bg-white">
-                <div id="validationMessage" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-xl">
-                    ⚠️ Sila lengkapkan semua 30 soalan sebelum membuat semakan!
-                </div>
-
-                <button id="btnSubmitWorksheet" onclick="submitWorksheet()" class="w-full md:w-2/3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-kawaii text-lg font-bold py-4 rounded-2xl shadow-xl hover:shadow-indigo-200 transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                    SEMAK JAWAPAN
+                <button id="btnStartExam" onclick="startExamSession()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition transform active:scale-95 flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-lock-open"></i> MULAKAN TUGASAN
                 </button>
             </div>
+        </section>
 
-        </main>
-
-        <!-- GOOGLE CLASSROOM INFORMATIONAL SECTION -->
-        <section class="mt-12 kawaii-card rounded-3xl p-6 bg-slate-50 border-2 border-slate-200">
-            <h3 class="font-kawaii text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-                🏫 INTEGRASI GOOGLE CLASSROOM
-            </h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div class="p-4 bg-white rounded-2xl border border-slate-200">
-                    <h4 class="font-bold text-indigo-700 mb-1">PILIHAN A — LINK TUGASAN CLASSROOM</h4>
-                    <p class="text-slate-600 mb-3">Murid boleh terus membuka pautan tugasan Google Classroom yang telah ditetapkan oleh guru untuk memuat naik fail PDF keputusan.</p>
-                    <button onclick="openGoogleClassroom()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-4 py-2 rounded-xl transition border border-indigo-200">
-                        🔗 Buka Google Classroom
-                    </button>
+        <!-- PROGRESS BAR & TIMER STICKY HEADER -->
+        <section id="progressSection" class="hidden sticky top-3 z-30 kawaii-card p-4 bg-white/90 backdrop-blur-md shadow-lg border-2 border-indigo-200">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="w-full sm:w-2/3 space-y-1">
+                    <div class="flex justify-between text-xs font-bold text-slate-600">
+                        <span>Kemajuan Tugasan: <span id="answeredCount">0</span> / 30 Soalan</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden p-0.5">
+                        <div id="progressBar" class="bg-gradient-to-r from-blue-400 to-indigo-500 h-full rounded-full transition-all duration-300 w-0"></div>
+                    </div>
                 </div>
 
-                <div class="p-4 bg-white rounded-2xl border border-slate-200">
-                    <h4 class="font-bold text-purple-700 mb-1">PILIHAN B — APPS SCRIPT / GOOGLE API</h4>
-                    <p class="text-slate-600">Sistem bersedia disambungkan secara automatik ke Google Sheets / Google Apps Script Webhook. Sila skonfigurasikan URL Webhook di Tetapan Guru jika diperlukan.</p>
+                <div id="timerContainer" class="flex items-center gap-2 bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-xl">
+                    <i class="fa-solid fa-stopwatch text-indigo-500 text-lg animate-pulse"></i>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold text-indigo-400 leading-none">Masa Berbaki</div>
+                        <div id="timerDisplay" class="text-sm font-bold text-indigo-700 font-mono">--:--</div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- RESULTS / SCORE CARD (Hidden until submitted) -->
+        <section id="resultsCard" class="hidden kawaii-card p-6 bg-gradient-to-br from-white to-blue-50/50 border-2 border-blue-200 relative overflow-hidden">
+            <div class="text-center mb-6">
+                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    KEPUTUSAN PENILAIAN TUGASAN
+                </span>
+                <h2 class="text-2xl font-bold text-slate-800 mt-2">PENGUMPULAN DATA PENGUJIAN CVT TRANSAXLE</h2>
+                <p class="text-xs text-slate-500">Masa Semakan: <span id="reviewTimestamp">--</span></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <!-- Large Handwritten Score Circle -->
+                <div class="flex flex-col items-center justify-center p-4">
+                    <div class="relative w-40 h-40 rounded-full border-4 border-dashed border-indigo-300 bg-white shadow-xl flex flex-col items-center justify-center p-2 transform hover:scale-105 transition">
+                        <span class="text-xs font-bold text-slate-400 uppercase">JUMLAH MARKAH</span>
+                        <div class="score-handwritten text-5xl font-extrabold text-indigo-600 my-1" id="scoreFraction">0 / 30</div>
+                        <span class="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200" id="scorePercentage">0%</span>
+                    </div>
+                </div>
+
+                <!-- Status Sticker & Details -->
+                <div class="space-y-3 text-center md:text-left">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block mb-1">STATUS PENCAPAIAN</span>
+                        <div id="statusStickerContainer" class="inline-block">
+                            <!-- Injected dynamically: TRAMPIL / BELUM TRAMPIL -->
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-1 bg-white p-3 rounded-xl border border-slate-200">
+                        <div><strong>Nama:</strong> <span id="resStudentName">--</span></div>
+                        <div><strong>No. KP / NDP:</strong> <span id="resStudentId">--</span></div>
+                        <div><strong>Sesi ID:</strong> <span id="resSessionId" class="font-mono text-indigo-600">--</span></div>
+                        <div><strong>Kekerapan:</strong> <span id="resFrequency">--</span></div>
+                    </div>
+                </div>
+
+                <!-- Teacher Digital Stamp -->
+                <div class="flex flex-col items-center justify-center p-4 bg-white/70 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-bold text-slate-400 mb-2">PENGESAHAN PEGAWAI PENILAI</span>
+                    <div id="teacherStamp" class="stamp-box stamp-trampil text-center">
+                        <div class="text-[10px] tracking-widest font-mono">OFFICIAL STAMP</div>
+                        <div class="text-sm my-0.5 font-black">∆ PEGAWAI PENILAI ∆</div>
+                        <div id="stampEvaluatorName" class="text-xs font-bold">AZRYZAN BESRI</div>
+                    </div>
+                    <div class="text-[11px] text-slate-500 mt-3 font-semibold text-center">
+                        Verified via Client Digital Worksheet System
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anti-Cheat Summary Log -->
+            <div class="mt-6 pt-4 border-t border-slate-200">
+                <h3 class="text-xs font-bold text-slate-600 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-indigo-500"></i> 🔐 STATUS INTEGRITI TUGASAN
+                </h3>
+                <div id="integrityLogCard" class="bg-white p-3 rounded-xl border border-slate-200 text-xs grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- QUESTION AREAS CONTAINER -->
+        <div id="questionsWrapper" class="space-y-8 opacity-50 pointer-events-none transition-all duration-300">
+
+            <!-- BAHAGIAN A — MCQ (20 SOALAN) -->
+            <section class="space-y-4">
+                <div class="bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-2xl border-2 border-blue-200 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base md:text-lg font-bold text-blue-900 flex items-center gap-2">
+                            <span class="bg-blue-500 text-white w-7 h-7 rounded-lg flex items-center justify-center text-sm font-extrabold">A</span>
+                            BAHAGIAN A — ANEKA PILIHAN (20 MARKAH)
+                        </h2>
+                        <p class="text-xs text-blue-700 mt-0.5">Pilih satu jawapan yang paling tepat bagi setiap soalan berikutnya.</p>
+                    </div>
+                    <span class="text-xs font-bold bg-blue-200 text-blue-800 px-3 py-1 rounded-full">20 Soalan</span>
+                </div>
+
+                <!-- Dynamic MCQ Questions Container -->
+                <div id="mcqContainer" class="space-y-5"></div>
+            </section>
+
+            <!-- BAHAGIAN B — BENAR ATAU SALAH (5 SOALAN) -->
+            <section class="space-y-4">
+                <div class="bg-gradient-to-r from-emerald-100 to-teal-100 p-4 rounded-2xl border-2 border-emerald-200 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base md:text-lg font-bold text-emerald-900 flex items-center gap-2">
+                            <span class="bg-emerald-500 text-white w-7 h-7 rounded-lg flex items-center justify-center text-sm font-extrabold">B</span>
+                            BAHAGIAN B — BENAR ATAU SALAH (5 MARKAH)
+                        </h2>
+                        <p class="text-xs text-emerald-700 mt-0.5">Tentukan sama ada kenyataan teknikal berikut BENAR atau SALAH.</p>
+                    </div>
+                    <span class="text-xs font-bold bg-emerald-200 text-emerald-800 px-3 py-1 rounded-full">5 Soalan</span>
+                </div>
+
+                <!-- Dynamic True/False Container -->
+                <div id="tfContainer" class="space-y-5"></div>
+            </section>
+
+            <!-- BAHAGIAN C — ISI TEMPAT KOSONG (5 SOALAN) -->
+            <section class="space-y-4">
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-2xl border-2 border-purple-200 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base md:text-lg font-bold text-purple-900 flex items-center gap-2">
+                            <span class="bg-purple-500 text-white w-7 h-7 rounded-lg flex items-center justify-center text-sm font-extrabold">C</span>
+                            BAHAGIAN C — ISI TEMPAT KOSONG (5 MARKAH)
+                        </h2>
+                        <p class="text-xs text-purple-700 mt-0.5">Lengkapkan tempat kosong dengan jawapan daripada Word Bank di bawah.</p>
+                    </div>
+                    <span class="text-xs font-bold bg-purple-200 text-purple-800 px-3 py-1 rounded-full">5 Soalan</span>
+                </div>
+
+                <!-- Word Bank Visual Card -->
+                <div class="kawaii-card p-4 bg-purple-50/60 border-2 border-purple-200">
+                    <div class="text-xs font-bold text-purple-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked"></i> WORD BANK (Klik perkataan untuk dimasukkan ke dalam ruang jawapan aktif)
+                    </div>
+                    <div id="wordBankChips" class="flex flex-wrap gap-2.5">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Dynamic Fill in Blanks Container -->
+                <div id="fillContainer" class="space-y-5"></div>
+            </section>
+        </div>
+
+        <!-- SUBMIT & ACTION BUTTONS -->
+        <section id="actionSection" class="kawaii-card p-6 text-center space-y-4 border-2 border-indigo-200">
+            <button id="btnSubmitWorksheet" onclick="submitWorksheet()" disabled class="w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-base px-10 py-4 rounded-2xl shadow-xl transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                <i class="fa-solid fa-paper-plane mr-2"></i> SEMAK JAWAPAN
+            </button>
+
+            <!-- Post Submission Action Toolbar -->
+            <div id="postSubmitToolbar" class="hidden flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                <button onclick="generatePDF()" class="w-full sm:w-auto bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-file-pdf"></i> 📄 MUAT TURUN PDF (A4)
+                </button>
+                <button onclick="openClassroomModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-chalkboard-user"></i> HANTAR KE GOOGLE CLASSROOM
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- TEACHER SETTINGS MODAL -->
+    <div id="modalTeacher" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="kawaii-card max-w-lg w-full p-6 space-y-4 bg-white border-2 border-indigo-300 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-indigo-500"></i> Tetapan Guru & Mod Ujian
+                </h3>
+                <button onclick="closeTeacherModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nama Pegawai Penilai (Stamp)</label>
+                    <input type="text" id="cfgEvaluator" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Google Classroom Assignment URL</label>
+                    <input type="url" id="cfgClassroomUrl" placeholder="https://classroom.google.com/c/..." class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Threshold Trampil (Markah)</label>
+                        <input type="number" id="cfgTrampilMin" min="1" max="30" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Masa Pemasa (Minit)</label>
+                        <input type="number" id="cfgTimerMinutes" min="5" max="180" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400">
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-amber-800 text-[11px] space-y-1">
+                    <div class="font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Nota Anti-Cheat Browser:
+                    </div>
+                    <p>
+                        Sistem anti-cheat ini mengesan pergerakan tab, penggunaan salin/tampal, dan tindakan skrin penuh di peringkat browser peranti murid. Ia direka untuk pemantauan kendiri dan tidak memerlukan backend.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t">
+                <button onclick="closeTeacherModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs">Batal</button>
+                <button onclick="saveTeacherSettings()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs">Simpan Tetapan</button>
+            </div>
+        </div>
     </div>
 
-    <!-- MODAL TETAPAN GURU -->
-    <div id="teacherModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-2 border-slate-200">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                <h3 class="font-kawaii text-lg font-bold text-slate-800 flex items-center gap-2">
-                    ⚙️ TETAPAN GURU / MODUL
+    <!-- GOOGLE CLASSROOM INTEGRATION MODAL -->
+    <div id="modalClassroom" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="kawaii-card max-w-lg w-full p-6 space-y-4 bg-white border-2 border-emerald-300">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Hantar ke Google Classroom
                 </h3>
-                <button onclick="toggleTeacherModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+                <button onclick="closeClassroomModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
             </div>
 
             <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">NAMA PEGAWAI PENILAI / GURU</label>
-                    <input type="text" id="cfgEvaluatorName" value="AZRYZAN BESRI" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold">
+                <!-- Option A: Link -->
+                <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 space-y-2">
+                    <h4 class="font-bold text-emerald-900 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-link"></i> PILIHAN A — BUKA GOOGLE CLASSROOM
+                    </h4>
+                    <p class="text-emerald-700">Buka tugasan Google Classroom yang dikonfigurasikan untuk muat naik fail PDF jawapan anda.</p>
+                    <button onclick="openClassroomLink()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> BUKA PAUTAN TUGASAN
+                    </button>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">GOOGLE CLASSROOM ASSIGNMENT URL</label>
-                    <input type="url" id="cfgClassroomURL" placeholder="https://classroom.google.com/..." class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">AMBANG MARKAH TRAMPIL (DARI 30)</label>
-                    <input type="number" id="cfgPassThreshold" value="18" min="1" max="30" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">TEMPOH MASA TUGASAN (MINIT)</label>
-                    <input type="number" id="cfgTimerMinutes" value="30" min="5" max="180" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold">
-                </div>
-
-                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 text-[11px] leading-relaxed">
-                    <strong>Nota Anti-Cheat:</strong> Anti-cheat ini ialah sistem pengesanan berasaskan browser client-side. Ia merekodkan aktiviti keluar tab dan salin/tampal untuk penilaian guru.
+                <!-- Option B: Apps Script / API Payload -->
+                <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200 space-y-2">
+                    <h4 class="font-bold text-blue-900 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> PILIHAN B — GOOGLE APPS SCRIPT / API PAYLOAD
+                    </h4>
+                    <p class="text-blue-700">Data JSON bersedia untuk dihantar ke Google Sheets atau Apps Script webhook guru.</p>
+                    <textarea id="jsonPayloadArea" readonly class="w-full h-24 p-2 font-mono text-[10px] bg-white border rounded-xl focus:outline-none"></textarea>
+                    <button onclick="copyJsonPayload()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy"></i> SALIN DATA JSON
+                    </button>
                 </div>
             </div>
 
-            <div class="mt-6 flex justify-end gap-2">
-                <button onclick="saveTeacherSettings()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition">
-                    Simpan Tetapan
-                </button>
+            <div class="flex justify-end pt-2 border-t">
+                <button onclick="closeClassroomModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & QUESTION DATA -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        
-        // QUESTION BANK (BASED STRICTLY ON PDF CONTENT)
-        const questionBankA = [
+
+        // Raw Question Data based strictly on provided PDF "STAS03/23-33-01-C09/KP(1/2) - PENGUMPULAN DATA PENGUJIAN CVT TRANSAXLE"
+        const RAW_MCQ = [
             {
-                id: "A1",
-                text: "Apakah maksud akronim CVT dalam sistem penghantaran automotif?",
-                options: [
-                    "Continuously Variable Transmission",
-                    "Controlled Velocity Transmission",
-                    "Central Variable Torque",
-                    "Continuous Valve Transaxle"
-                ],
-                correct: 0,
-                explanation: "CVT bermaksud Continuously Variable Transmission di mana nisbah gear boleh dikawal secara berterusan (steplessly)."
+                id: "mcq_1",
+                question: "Prinsip asas penghantaran transmisi CVT dibangunkan berdasarkan kepada prinsip asal apa?",
+                options: ["Chain Drive Transmission", "Planetary Gearset", "Dual Clutch Transmission", "Manual Torque Converter"],
+                answer: 0,
+                explanation: "Mengikut Kertas Penerangan m/s 2, konsep CVT berdasarkan kepada prinsip yang telah lama wujud iaitu 'Chain Drive Transmission'."
             },
             {
-                id: "A2",
-                text: "Konsep CVT adalah berdasarkan prinsip yang telah lama wujud iaitu daripada:",
-                options: [
-                    "Hydraulic Torque Converter",
-                    "Chain Drive Transmission",
-                    "Planetary Gear System",
-                    "Direct Clutch Drive"
-                ],
-                correct: 1,
-                explanation: "Menurut Kertas Penerangan, konsep CVT berdasarkan kepada 'Chain Drive Transmission' / Belt/Chain Drive principle."
+                id: "mcq_2",
+                question: "Komponen penting dalam multitronic® yang membolehkan nisbah pengurangan diselaraskan secara berterusan ialah:",
+                options: ["Variator", "Planetary Carrier", "Synchronizer Ring", "Torque Rod"],
+                answer: 0,
+                explanation: "Variator membolehkan nisbah pengurangan diselaraskan secara berterusan antara nisbah permulaan tork pendaraban dan nisbah tork pendaraban akhir."
             },
             {
-                id: "A3",
-                text: "Komponen apakah yang membolehkan nisbah pengurangan diselaraskan secara steplessly dalam CVT?",
-                options: [
-                    "Torque Converter",
-                    "Variator",
-                    "Differential Gear",
-                    "Manual Synchronizer"
-                ],
-                correct: 1,
-                explanation: "Variator membolehkan nisbah pengurangan diselaraskan secara berterusan antara nisbah permulaan tork dan nisbah akhir."
+                id: "mcq_3",
+                question: "Komponen variator pada transmisi CVT terdiri daripada elemen berikut KECUALI:",
+                options: ["Takal Utama (Pulley set 1)", "Takal Menengah (Pulley set 2)", "Rantai khas berbentuk V", "Gear Taji Lurus (Spur gear)"],
+                answer: 3,
+                explanation: "Variator terdiri daripada dua pasang cakera tirus (Pulley set 1 dan Pulley set 2) dan rantai khas yang berjalan dalam jurang berbentuk V."
             },
             {
-                id: "A4",
-                text: "Variator dalam sistem multitronic® terdiri daripada dua pasang tirus cakera iaitu:",
-                options: [
-                    "Pulley set 1 (utama) dan Pulley set 2 (menengah)",
-                    "Flywheel dan Clutch Plate",
-                    "Input Shaft dan Output Shaft sahaja",
-                    "Sun Gear dan Ring Gear"
-                ],
-                correct: 0,
-                explanation: "Variator terdiri daripada set pulleys utama (pulley set 1) dan set takal menengah (pulley set 2)."
+                id: "mcq_4",
+                question: "Set takal utama (Pulley set 1) dipacu oleh enjin melalui komponen apa?",
+                options: ["Auxiliary reduction gear step", "Differential lock", "Direct flywheel spline", "Reverse brake clutch"],
+                answer: 0,
+                explanation: "Kertas Penerangan m/s 3 menyatakan Pulley set 1 dipacu oleh enjin melalui 'auxiliary reduction gear step'."
             },
             {
-                id: "A5",
-                text: "Dalam transmisi CVT multitronic®, Pulley set 1 dipacu oleh enjin melalui:",
+                id: "mcq_5",
+                question: "Bagaimanakah pelarasan pembolehubah diameter trek rantai dan nisbah penghantaran dilakukan pada variator?",
                 options: [
-                    "Auxiliary reduction gear step",
-                    "Differential crown gear",
-                    "Direct drive clutch",
-                    "Hydraulic pump gear"
+                    "Salah satu takal tirus dalam setiap set takal boleh dipindahkan pada batang",
+                    "Rantai diregangkan secara manual menggunakan tuas mekanikal",
+                    "Tekanan udara menolak kedua-dua takal keluar dari perumah",
+                    "Takal ditukar saiz secara automatik oleh palam pencuh"
                 ],
-                correct: 0,
-                explanation: "Pulley set 1 dipacu oleh enjin melalui auxiliary reduction gear step."
+                answer: 0,
+                explanation: "Salah satu takal tirus dalam setiap set takal boleh dipindahkan pada batang untuk pelarasan pembolehubah diameter trek rantai."
             },
             {
-                id: "A6",
-                text: "Elemen penghantaran kuasa yang berjalan dalam jurang berbentuk V antara dua pasang takal tirus ialah:",
+                id: "mcq_6",
+                question: "Apakah definisi arahan kerja (work instruction) menurut Kertas Penerangan?",
                 options: [
-                    "Belt getah biasa",
-                    "Rantai khas (special chain)",
-                    "Rantai basikal",
-                    "Cable dawai keluli"
+                    "Dokumen/rekod yang menceritakan langkah-langkah secara turutan bagi melaksanakan kerja",
+                    "Resit pembayaran kos pembaikan kenderaan dari bengkel",
+                    "Surat jaminan alat ganti daripada pengeluar kereta",
+                    "Senarai harga komponen alat ganti transmisi CVT"
                 ],
-                correct: 1,
-                explanation: "Rantai khas (special chain) bertindak sebagai elemen penghantaran kuasa di dalam jurang berbentuk V variator."
+                answer: 0,
+                explanation: "Definisi arahan kerja ialah dokumen/rekod yang menceritakan langkah-langkah secara turutan bagi melaksanakan kerja yang ditetapkan."
             },
             {
-                id: "A7",
-                text: "Apakah kelebihan utama aliran tork pada enjin pembakaran dalaman dengan transmisi CVT?",
-                options: [
-                    "Aliran tork tidak terputus-putus dan nisbah berubah-ubah secara berterusan",
-                    "Meningkatkan penggunaan bahan api secara ketara",
-                    "Kelajuan kenderaan dihadkan kepada 60 km/j sahaja",
-                    "Menukarkan gear secara manual menggunakan klac kaki"
-                ],
-                correct: 0,
-                explanation: "Untuk enjin pembakaran dalam, aliran tork CVT tidak terputus-putus sebaliknya ia adalah berterusan mengikut kuasa enjin."
+                id: "mcq_7",
+                question: "Apakah maksud singkatan MIL dalam lembaran diagnosis (Diagnose Worksheet)?",
+                options: ["Malfunction Indicator Lamp", "Manual Injection Level", "Mechanical Ignition Lock", "Main Intake Line"],
+                answer: 0,
+                explanation: "MIL bermaksud Malfunction Indicator Lamp (Lampu Penunjuk Kerosakan)."
             },
             {
-                id: "A8",
-                text: "Apakah definisi Arahan Kerja mengikut modul pengujian automotif?",
-                options: [
-                    "Senarai harga alat ganti kenderaan",
-                    "Dokumen atau rekod yang menceritakan langkah-langkah turutan bagi melaksanakan kerja",
-                    "Resit pembayaran perkhidmatan pelanggan",
-                    "Sijil pendaftaran lesen pemandu kenderaan"
-                ],
-                correct: 1,
-                explanation: "Arahan kerja disimpulkan sebagai dokumen/rekod yang menceritakan langkah-langkah secara turutan bagi melaksanakan kerja."
+                id: "mcq_8",
+                question: "Antara berikut, yang manakah BUKAN pilihan gejala (symptom) kerosakan CVT dalam lembaran diagnosis?",
+                options: ["Vehicle does not move", "Shift shock or slip", "Noise or vibration", "Air conditioner blowing warm air"],
+                answer: 3,
+                explanation: "Gejala kerosakan CVT merangkumi vehicle does not move, no shift, shift shock/slip, noise/vibration, lock-up malfunction, dan no pattern select."
             },
             {
-                id: "A9",
-                text: "Bagi memastikan arahan kerja lengkap dan mudah digunakan, tatacara kerja hendaklah:",
-                options: [
-                    "Disusun mengikut turutan dan ditunjukkan langkah demi langkah",
-                    "Ditulis tanpa mengikut sebarang susunan khusus",
-                    "Mengabaikan sebarang rakaman gambar atau video",
-                    "Dijalankan secara ujian secara terus tanpa panduan"
-                ],
-                correct: 0,
-                explanation: "Arahan kerja mesti disusun mengikut turutan, tunjuk langkah demi langkah, dan lebih baik ada gambar/video."
+                id: "mcq_9",
+                question: "Apakah dua ujian tekanan dan kepegunan utama yang disenaraikan pada Langkah 3 lembaran diagnosis CVT?",
+                options: ["Stall test dan Line pressure test", "Emissions test dan Dyno run", "Compression test dan Spark test", "Battery load test dan Alternator test"],
+                answer: 0,
+                explanation: "Langkah 3 lembaran diagnosis menentukan ujian Stall test dan Line pressure test perlu dilaksanakan."
             },
             {
-                id: "A10",
-                text: "Antara maklumat awal pelanggan yang dicatatkan pada Lembaran Diagnosis CVT (Diagnose Worksheet) ialah:",
-                options: [
-                    "Nama pelanggan, VIN, mileage, simptom kerosakan, dan status MIL",
-                    "Saiz rim tayar dan warna cat badan kenderaan sahaja",
-                    "Maklumat akaun bank peribadi pemilik kenderaan",
-                    "Insurans kenderaan pihak ketiga sahaja"
-                ],
-                correct: 0,
-                explanation: "Lembaran diagnosis merekodkan maklumat seperti Customer Name, VIN, Mileage, Symptoms, MIL, dan ujian CVT."
+                id: "mcq_10",
+                question: "Modul kawalan elektronik transmisi yang menyimpan rekod self-diagnosis dipanggil:",
+                options: ["TCM (Transmission Control Module)", "BCM (Body Control Module)", "ABS (Anti-lock Braking System)", "SRS (Airbag Module)"],
+                answer: 0,
+                explanation: "TCM menyimpan keputusan self-diagnosis yang dikesan semasa imbasan kerosakan."
             },
             {
-                id: "A11",
-                text: "Antara simptom kerosakan transmisi CVT yang direkodkan dalam Diagnose Worksheet adalah berikut, KECUALI:",
-                options: [
-                    "Vehicle does not move (Kenderaan tidak bergerak)",
-                    "Lock-up malfunction atau shift shock / slip",
-                    "Air-cond kenderaan tidak sejuk",
-                    "Noise or vibration (Bunyi atau getaran)"
-                ],
-                correct: 2,
-                explanation: "Simptom kerosakan CVT merangkumi vehicle does not move, lock-up malfunction, shift shock/slip, noise/vibration."
+                id: "mcq_11",
+                question: "Apakah langkah terakhir (Langkah 8) dalam senarai arahan kerja lembaran diagnosis CVT?",
+                options: ["Erase the results of the self-diagnosis from the TCM", "Perform road test", "Inspect CVT fluid level", "Replace the engine oil"],
+                answer: 0,
+                explanation: "Langkah 8 mengarahkan juruteknik memadamkan (Erase) keputusan self-diagnosis daripada TCM selepas pembaikan."
             },
             {
-                id: "A12",
-                text: "Semasa ujian stall test dan line pressure test, komponen yang disyaki jika berlaku kerosakan termasuk:",
+                id: "mcq_12",
+                question: "Apakah fungsi utama Laporan Sejarah Kenderaan (Vehicle History Report)?",
                 options: [
-                    "Alternator dan starter motor",
-                    "Torque converter one-way clutch, forward clutch, dan steel belt",
-                    "Radio car player dan speaker",
-                    "Wiper motor dan cermin kenderaan"
-                ],
-                correct: 1,
-                explanation: "Pemeriksaan stall test & line pressure test melibatkan torque converter one-way clutch, forward clutch, reverse brake, steel belt, dll."
-            },
-            {
-                id: "A13",
-                text: "Apakah langkah terakhir dalam prosedur diagnosis selepas semua bahagian kerosakan dibaiki dan ujian jalan selesai?",
-                options: [
-                    "Mencuci enjin kenderaan",
-                    "Erase (padam) keputusan self-diagnosis daripada TCM",
-                    "Menukar minyak enjin baharu",
-                    "Menanggalkan keseluruhan kotak gear"
-                ],
-                correct: 1,
-                explanation: "Langkah ke-8 dalam rekod arahan kerja menyatakan: 'Erase the results of the self-diagnosis from the TCM'."
-            },
-            {
-                id: "A14",
-                text: "Apakah fungsi utama Laporan Sejarah Kenderaan (Vehicle History Report)?",
-                options: [
-                    "Memberitahu mekanik sejarah pembaikan, rekod servis, dan sejarah kemalangan lalu",
-                    "Menentukan kadar faedah pinjaman bank",
-                    "Membekalkan kelajuan maksimum kenderaan di litar racing",
+                    "Memberitahu mekanik sejarah pembaikan/servis lalu dan kemalangan kenderaan",
+                    "Menentukan kadar cukai jalan harian kenderaan",
+                    "Mengukur kelajuan maksimum kenderaan di litar ujian",
                     "Menukar hak milik kenderaan secara automatik"
                 ],
-                correct: 0,
-                explanation: "Laporan sejarah kenderaan memberitahu mekanik apa yang berlaku atau servis yang dibuat serta rekod kemalangan lalu."
+                answer: 0,
+                explanation: "Laporan sejarah kenderaan memberitahu mekanik tentang kerja servis dan jika kereta pernah mengalami kemalangan."
             },
             {
-                id: "A15",
-                text: "Kod nombor siri khas kenderaan yang digunakan untuk menjana Laporan Sejarah Kenderaan dipanggil:",
+                id: "mcq_13",
+                question: "Mengapakah laporan sejarah kenderaan sangat penting apabila membeli kenderaan terpakai?",
                 options: [
-                    "NDP",
-                    "VIN (Vehicle Identification Number)",
-                    "DTC",
-                    "ISO"
+                    "Membantu mengetahui keadaan kenderaan dari segi servis dan elak kenderaan pernah kemalangan",
+                    "Mendapatkan diskaun bahan api percuma",
+                    "Menukar warna cat kenderaan secara automatik",
+                    "Membatalkan rekod pendaftaran lama"
                 ],
-                correct: 1,
-                explanation: "Maklumat spesifikasi kenderaan dan rekod hak milik dienkodkan melalui VIN (Vehicle Identification Number)."
+                answer: 0,
+                explanation: "Laporan sejarah memastikan kenderaan terpakai berada dalam keadaan baik dari segi rekod servis dan bebas kemalangan."
             },
             {
-                id: "A16",
-                text: "Maklumat '4-Wheel ABS' yang terdapat dalam Laporan Sejarah Kenderaan merujuk kepada sistem:",
-                options: [
-                    "Anti-Brake System / Anti-lock Braking System",
-                    "Automatic Brake Sensor",
-                    "Airbag Safety System",
-                    "Active Booster Steering"
-                ],
-                correct: 0,
-                explanation: "4-Wheel ABS merujuk kepada Anti-Brake System / Anti-lock Braking System keselamatan pada kenderaan."
+                id: "mcq_14",
+                question: "Apakah nama sistem penyedia laporan sejarah kenderaan contoh yang dirujuk dalam Kertas Penerangan?",
+                options: ["NMVTIS", "JPJ-ONLINE", "ISO-9001", "OBD-II SYSTEM"],
+                answer: 0,
+                explanation: "Kertas Penerangan m/s 6 memaparkan contoh Laporan Sejarah Kenderaan daripada sumber NMVTIS."
             },
             {
-                id: "A17",
-                text: "Apakah yang dimasukkan di bawah kategori 'Rekod Penyelenggaraan' dalam laporan sejarah kenderaan?",
-                options: [
-                    "Senarai lagu yang dimainkan pada radio",
-                    "Laporan penyelenggaraan rutin atau pembaikan lalu oleh mekanik",
-                    "Nama penumpang yang pernah menaiki kenderaan",
-                    "Bilangan kunci pendua yang disimpan"
-                ],
-                correct: 1,
-                explanation: "Rekod penyelenggaraan menunjukkan penyelenggaraan atau pembaikan rutin yang dilakukan oleh mekanik pada masa lalu."
+                id: "mcq_15",
+                question: "Nombor pengenalan unik 17 aksara bagi sesebuah kenderaan dinamakan sebagai:",
+                options: ["VIN (Vehicle Identification Number)", "MIL (Malfunction Indicator Lamp)", "NDP (Nombor Daftar Pelajar)", "TCM (Transmission Control)"],
+                answer: 0,
+                explanation: "VIN (Vehicle Identification Number) ialah nombor siri unik pengenalan kenderaan."
             },
             {
-                id: "A18",
-                text: "Mengapakah Laporan Sejarah Kenderaan sangat penting semasa urusan membeli kenderaan terpakai?",
-                options: [
-                    "Memastikan kenderaan berada dalam keadaan baik dari segi servis dan bebas kemalangan teruk",
-                    "Untuk membolehkan pemandu mendapat lesen percuma",
-                    "Untuk mengelakkan kenderaan daripada membayar tol",
-                    "Untuk mengubah tarikh pembuatan kenderaan"
-                ],
-                correct: 0,
-                explanation: "Ia membantu mengetahui sejarah servis dan kemalangan bagi memastikan kenderaan berada dalam keadaan baik."
+                id: "mcq_16",
+                question: "Bahagian 'Junk / Salvage / Insurance Records' dalam laporan sejarah kenderaan merekodkan:",
+                options: ["Kemalangan serius dan rekod kerosakan total loss", "Pertukaran palam pencuh berkala", "Aksesori hiasan dalaman kereta", "Kadar penggunaan bahan api harian"],
+                answer: 0,
+                explanation: "Bahagian Junk / Salvage menyenaraikan kenderaan yang rosak teruk atau diisytiharkan total loss oleh insurans."
             },
             {
-                id: "A19",
-                text: "Lampu amaran kerosakan yang dicatat dalam Diagnose Worksheet dikenali sebagai ringkasan:",
-                options: [
-                    "ABS Indicator",
-                    "MIL (Malfunction Indicator Lamp)",
-                    "Battery Light",
-                    "Oil Pressure Light"
-                ],
-                correct: 1,
-                explanation: "MIL bermaksud Malfunction Indicator Lamp yang direkodkan sama ada Continuously lit atau Not lit."
+                id: "mcq_17",
+                question: "Rekod penyelenggaraan di dalam laporan kerja menunjukkan perkara berikut KECUALI:",
+                options: ["Gaya pemanduan agresif pemandu", "Penyelenggaraan rutin oleh mekanik lalu", "Pembaikan yang pernah dilakukan", "Sejarah servis berkala"],
+                answer: 0,
+                explanation: "Rekod penyelenggaraan merekodkan senarai penyelenggaraan/pembaikan rutin, bukannya gaya pemanduan pemandu."
             },
             {
-                id: "A20",
-                text: "Singkatan TCM dalam pengurusan kerosakan transmisi automatik/CVT merujuk kepada:",
+                id: "mcq_18",
+                question: "Dua jenis perkara utama yang terkandung di dalam laporan kerja mengikut Kertas Penerangan m/s 7 ialah:",
+                options: ["Kemalangan dan Rekod penyelenggaraan", "Kelajuan enjin dan Saiz tayar", "Warna badan dan Jenis audio", "Nama pemandu dan Alamat rumah"],
+                answer: 0,
+                explanation: "Kertas Penerangan m/s 7 menggariskan dua jenis perkara laporan kerja iaitu i) Kemalangan dan ii) Rekod penyelenggaraan."
+            },
+            {
+                id: "mcq_19",
+                question: "Sifat aliran tork bagi transmisi CVT semasa operasi enjin pembakaran dalaman ialah:",
+                options: ["Berterusan dan tidak terputus-putus", "Terputus-putus pada setiap penukaran gear", "Hanya berfungsi pada kelajuan tinggi", "Berhenti apabila pedal minyak dilepaskan"],
+                answer: 0,
+                explanation: "Untuk enjin pembakaran dalaman, aliran tork CVT adalah berterusan dan tidak terputus-putus."
+            },
+            {
+                id: "mcq_20",
+                question: "Mengapakah arahan kerja disyorkan untuk disertai dengan gambar atau rakaman video?",
                 options: [
-                    "Total Clutch Module",
-                    "Transmission Control Module",
-                    "Torque Converter Manual",
-                    "Tire Control Management"
+                    "Memudahkan pemahaman langkah kerja secara jelas dan mengikut turutan",
+                    "Mengurangkan saiz cetakan dokumen kertas penerangan",
+                    "Mengelakkan keperluan pemeriksaan minyak CVT",
+                    "Menggantikan fungsi pengimbas diagnosis elektronik"
                 ],
-                correct: 1,
-                explanation: "TCM bermaksud Transmission Control Module, unit kawalan elektronik bagi transmisi."
+                answer: 0,
+                explanation: "Arahan kerja lebih mudah difahami apabila setiap tatacara kerja ditunjukkan melalui gambar atau video secara langkah demi langkah."
             }
         ];
 
-        const questionBankB = [
+        const RAW_TF = [
             {
-                id: "B1",
-                text: "Konsep CVT membolehkan enjin sentiasa beroperasi dalam julat kelajuan yang optimum sama ada untuk prestasi atau penjimatan bahan api.",
-                correct: true,
-                explanation: "BENAR. Variator membolehkan nisbah sentiasa diselaraskan supaya enjin beroperasi pada julat kelajuan optimum."
+                id: "tf_1",
+                question: "Nisbah pengurangan pada transmisi CVT boleh dikawal secara 'steplessly' menerusi komponen variator.",
+                answer: "BENAR",
+                explanation: "BENAR. Nisbah pengurangan paling singkat dan paling lama dikawal steplessly oleh variator."
             },
             {
-                id: "B2",
-                text: "Pulley set 2 (takal menengah) dalam variator CVT dipacu oleh enjin secara terus melalui auxiliary reduction gear step.",
-                correct: false,
-                explanation: "SALAH. Pulley set 1 dipacu oleh enjin. Tork enjin kemudian dihantar melalui rantai ke Pulley set 2."
+                id: "tf_2",
+                question: "Pulley set 2 (takal menengah) dipacu secara terus oleh enjin dan menghantar tork ke Pulley set 1.",
+                answer: "SALAH",
+                explanation: "SALAH. Pulley set 1 (utama) dipacu oleh enjin, manakala tork dihantar melalui rantai ke Pulley set 2."
             },
             {
-                id: "B3",
-                text: "Adalah lebih baik sekiranya setiap tatacara kerja dalam Arahan Kerja ditunjukkan melalui gambar atau rakaman video.",
-                correct: true,
-                explanation: "BENAR. Mengikut dokumen arahan kerja, penggunaan gambar atau video memudahkan kefahaman langkah kerja."
+                id: "tf_3",
+                question: "Arahan kerja ialah dokumen atau rekod yang menceritakan langkah-langkah secara turutan bagi melaksanakan kerja.",
+                answer: "BENAR",
+                explanation: "BENAR. Ini adalah definisi rasmi arahan kerja mengikut Kertas Penerangan."
             },
             {
-                id: "B4",
-                text: "Laporan Sejarah Kenderaan tidak mencatatkan rekod kemalangan serius dan hanya menyimpan rekod pembaikan kecil sahaja.",
-                correct: false,
-                explanation: "SALAH. Laporan sejarah kenderaan menyenaraikan kedua-dua kemalangan besar dan kecil yang dilaporkan."
+                id: "tf_4",
+                question: "Keputusan self-diagnosis kerosakan CVT tidak perlu dipadamkan dari TCM selepas kerja pembaikan selesai.",
+                answer: "SALAH",
+                explanation: "SALAH. Langkah 8 menetapkan keputusan self-diagnosis mesti dipadamkan (erase) daripada TCM."
             },
             {
-                id: "B5",
-                text: "Keputusan self-diagnosis kerosakan transmisi CVT dalam TCM perlu dipadamkan (erase) selepas semua pembaikan dan ujian jalan selesai dilakukan.",
-                correct: true,
-                explanation: "BENAR. Ini adalah langkah ke-8 dalam carta aliran kerja diagnosis CVT."
+                id: "tf_5",
+                question: "Laporan sejarah kenderaan menyenaraikan kemalangan serius yang dilaporkan kepada syarikat insurans.",
+                answer: "BENAR",
+                explanation: "BENAR. Kemalangan yang dilaporkan kepada insurans akan direkodkan dalam laporan sejarah kenderaan."
             }
         ];
 
-        const wordBankList = ["variator", "steplessly", "TCM", "VIN", "MIL"];
-
-        const questionBankC = [
+        const RAW_FILL = [
             {
-                id: "C1",
-                text: "Nisbah pengurangan pada CVT dikawal secara __________ melalui variator tanpa selang langkah gear.",
-                answer: "steplessly",
-                explanation: "Nisbah pengurangan diselaraskan secara steplessly (berterusan tanpa langkah)."
-            },
-            {
-                id: "C2",
-                text: "Komponen __________ terdiri daripada dua pasang takal tirus (pulley set 1 & 2) dan rantai khas.",
+                id: "fill_1",
+                question: "Nisbah pengurangan transmisi CVT dikawal secara berterusan (steplessly) menerusi komponen ____________.",
                 answer: "variator",
-                explanation: "Variator terdiri daripada dua pasang takal tirus dan rantai khas yang berjalan di jurang V."
+                explanation: "Variator mengandungi takal tirus yang melaraskan nisbah transmisi secara berterusan."
             },
             {
-                id: "C3",
-                text: "Keputusan self-diagnosis yang dikesan hendaklah dipadamkan daripada modul __________ selepas pembaikan.",
+                id: "fill_2",
+                question: "Elemen penghantaran kuasa yang berjalan dalam jurang berbentuk V antara dua pasang takal tirus dinamakan ____________.",
+                answer: "rantai khas",
+                explanation: "Rantai khas bertindak sebagai elemen penghantaran kuasa antara takal utama dan takal menengah."
+            },
+            {
+                id: "fill_3",
+                question: "Ujian kepegunan enjin dan transmisi yang dilakukan semasa pemeriksaan tekanan talian dipanggil ____________.",
+                answer: "Stall test",
+                explanation: "Stall test dan line pressure test dilakukan untuk menguji klac dan pemacu CVT."
+            },
+            {
+                id: "fill_4",
+                question: "Selepas pembaikan kerosakan CVT diselesaikan, rekod self-diagnosis perlu dipadamkan daripada ____________.",
                 answer: "TCM",
-                explanation: "Hasil ujian self-diagnosis perlu dipadamkan daripada Transmission Control Module (TCM)."
+                explanation: "TCM (Transmission Control Module) menyimpan kod kerosakan yang perlu dipadamkan."
             },
             {
-                id: "C4",
-                text: "Nombor pengenalan khas kenderaan yang digunakan untuk menyemak Laporan Sejarah Kenderaan ialah __________.",
+                id: "fill_5",
+                question: "Nombor pengenalan unik 17 aksara yang digunakan dalam laporan sejarah kenderaan dikenali sebagai ____________.",
                 answer: "VIN",
-                explanation: "VIN (Vehicle Identification Number) dienkodkan dengan maklumat terperinci sejarah kenderaan."
-            },
-            {
-                id: "C5",
-                text: "Lampu amaran kerosakan yang dicatat dalam lembaran diagnosis sama ada menyala terus atau tidak dipanggil __________.",
-                answer: "MIL",
-                explanation: "MIL merujuk kepada Malfunction Indicator Lamp."
+                explanation: "VIN (Vehicle Identification Number) ialah nombor siri unik pengenalan kenderaan."
             }
         ];
 
-        // GLOBAL APP STATE
-        let appState = {
-            studentName: '',
-            studentNDP: '',
-            penilaianType: 'Penilaian Utama',
-            isExamStarted: false,
-            isSubmitted: false,
+
+        // Global State Variables
+        let activeQuestionsA = [];
+        let activeQuestionsB = [];
+        let activeQuestionsC = [];
+        
+        let studentAnswers = {
+            mcq: {},
+            tf: {},
+            fill: {}
+        };
+
+        let sessionState = {
+            active: false,
+            submitted: false,
+            sessionId: "",
             startTime: null,
             endTime: null,
             timerInterval: null,
-            timeRemainingSeconds: 30 * 60,
-            userAnswersA: {},
-            userAnswersB: {},
-            userAnswersC: {},
-            activeInputCId: null,
-            integrityLog: {
-                tabExits: 0,
-                copyAttempts: 0,
-                pasteAttempts: 0,
-                shortcuts: 0,
-                fullscreenExits: 0
-            },
-            warningCount: 0,
-            sessionId: '',
-            score: 0,
-            percentage: 0,
-            isTrampil: false
+            remainingSeconds: 1800, // Default 30 mins
+            activeInputFillId: null
+        };
+
+        let antiCheatLog = {
+            tabSwitches: 0,
+            copyAttempts: 0,
+            pasteAttempts: 0,
+            contextMenuAttempts: 0,
+            keyboardShortcutAttempts: 0,
+            fullscreenExits: 0,
+            warningsShown: 0
         };
 
         let teacherConfig = {
-            evaluatorName: 'AZRYZAN BESRI',
-            classroomURL: 'https://classroom.google.com',
-            passThreshold: 18,
+            evaluatorName: "AZRYZAN BESRI",
+            classroomUrl: "",
+            trampilMin: 18,
             timerMinutes: 30
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
             loadTeacherConfig();
-            renderQuestions();
             setupAntiCheatListeners();
+            setupWordBankUI();
+            checkExistingSession();
         });
 
-        function loadTeacherConfig() {
-            const saved = localStorage.getItem('cvt_teacher_cfg');
-            if (saved) {
-                try {
-                    teacherConfig = JSON.parse(saved);
-                    document.getElementById('cfgEvaluatorName').value = teacherConfig.evaluatorName;
-                    document.getElementById('cfgClassroomURL').value = teacherConfig.classroomURL;
-                    document.getElementById('cfgPassThreshold').value = teacherConfig.passThreshold;
-                    document.getElementById('cfgTimerMinutes').value = teacherConfig.timerMinutes;
-                } catch(e){}
-            }
-        }
-
-        function toggleTeacherModal() {
-            const modal = document.getElementById('teacherModal');
-            modal.classList.toggle('hidden');
-        }
-
-        function saveTeacherSettings() {
-            teacherConfig.evaluatorName = document.getElementById('cfgEvaluatorName').value || 'AZRYZAN BESRI';
-            teacherConfig.classroomURL = document.getElementById('cfgClassroomURL').value || 'https://classroom.google.com';
-            teacherConfig.passThreshold = parseInt(document.getElementById('cfgPassThreshold').value) || 18;
-            teacherConfig.timerMinutes = parseInt(document.getElementById('cfgTimerMinutes').value) || 30;
-            
-            localStorage.setItem('cvt_teacher_cfg', JSON.stringify(teacherConfig));
-            toggleTeacherModal();
-            alert('Tetapan guru berjaya disimpan!');
-        }
-
-        // RENDER ALL QUESTIONS
-        function renderQuestions() {
-            // BAHAGIAN A
-            const containerA = document.getElementById('containerBahagianA');
-            containerA.innerHTML = questionBankA.map((q, idx) => `
-                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-purple-200" id="card-${q.id}">
-                    <div class="flex items-start gap-3 mb-3">
-                        <span class="bg-purple-100 text-purple-800 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0">
-                            Soalan ${idx + 1}
-                        </span>
-                        <h4 class="font-semibold text-sm text-slate-800 leading-snug">${q.text}</h4>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 mt-3">
-                        ${q.options.map((opt, oIdx) => {
-                            const optionLetter = String.fromCharCode(65 + oIdx);
-                            return `
-                                <button type="button" 
-                                    onclick="selectOptionA('${q.id}', ${oIdx})"
-                                    id="btn-${q.id}-${oIdx}"
-                                    class="option-btn text-left p-3 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-purple-50 hover:border-purple-300 text-xs font-medium flex items-start gap-2.5 transition">
-                                    <span class="font-bold text-purple-700 bg-white border border-slate-200 px-2 py-0.5 rounded-md text-[11px] shrink-0">${optionLetter}</span>
-                                    <span class="text-slate-700 flex-1 leading-relaxed">${opt}</span>
-                                </button>
-                            `;
-                        }).join('')}
-                    </div>
-
-                    <div id="feedback-${q.id}" class="hidden mt-3 p-3 rounded-xl text-xs"></div>
-                </div>
-            `).join('');
-
-            // BAHAGIAN B
-            const containerB = document.getElementById('containerBahagianB');
-            containerB.innerHTML = questionBankB.map((q, idx) => `
-                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-emerald-200" id="card-${q.id}">
-                    <div class="flex items-start gap-3 mb-3">
-                        <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0">
-                            Soalan ${idx + 21}
-                        </span>
-                        <h4 class="font-semibold text-sm text-slate-800 leading-snug">${q.text}</h4>
-                    </div>
-
-                    <div class="flex gap-3 mt-3">
-                        <button type="button" 
-                            onclick="selectOptionB('${q.id}', true)"
-                            id="btn-${q.id}-true"
-                            class="option-btn flex-1 py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 text-xs font-bold text-slate-700 transition text-center">
-                            👍 BENAR
-                        </button>
-                        <button type="button" 
-                            onclick="selectOptionB('${q.id}', false)"
-                            id="btn-${q.id}-false"
-                            class="option-btn flex-1 py-3 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-rose-50 hover:border-rose-300 text-xs font-bold text-slate-700 transition text-center">
-                            👎 SALAH
-                        </button>
-                    </div>
-
-                    <div id="feedback-${q.id}" class="hidden mt-3 p-3 rounded-xl text-xs"></div>
-                </div>
-            `).join('');
-
-            // BAHAGIAN C WORD BANK
-            const wbContainer = document.getElementById('wordBankContainer');
-            wbContainer.innerHTML = wordBankList.map(word => `
-                <button type="button" 
-                    onclick="clickWordBank('${word}')"
-                    class="bg-white hover:bg-amber-100 text-amber-900 font-bold text-xs px-3.5 py-2 rounded-xl border border-amber-200 shadow-sm transition active:scale-95">
-                    " ${word} "
-                </button>
-            `).join('');
-
-            // BAHAGIAN C QUESTIONS
-            const containerC = document.getElementById('containerBahagianC');
-            containerC.innerHTML = questionBankC.map((q, idx) => `
-                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-blue-200" id="card-${q.id}">
-                    <div class="flex items-start gap-3 mb-3">
-                        <span class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-lg shrink-0">
-                            Soalan ${idx + 26}
-                        </span>
-                        <h4 class="font-semibold text-sm text-slate-800 leading-snug">${q.text}</h4>
-                    </div>
-
-                    <div class="mt-3">
-                        <input type="text" 
-                            id="input-${q.id}" 
-                            onfocus="setActiveInputC('${q.id}')"
-                            oninput="updateAnswerC('${q.id}', this.value)"
-                            placeholder="Klik Word Bank atau taip jawapan di sini..."
-                            class="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:border-blue-400 focus:outline-none text-xs font-bold transition text-blue-900 bg-slate-50 focus:bg-white">
-                    </div>
-
-                    <div id="feedback-${q.id}" class="hidden mt-3 p-3 rounded-xl text-xs"></div>
-                </div>
-            `).join('');
-        }
-
-        function selectOptionA(qId, optionIdx) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
-            appState.userAnswersA[qId] = optionIdx;
-
-            // Visual update
-            for (let i = 0; i < 4; i++) {
-                const btn = document.getElementById(`btn-${qId}-${i}`);
-                if (btn) btn.classList.remove('selected');
-            }
-            const selectedBtn = document.getElementById(`btn-${qId}-${optionIdx}`);
-            if (selectedBtn) selectedBtn.classList.add('selected');
-
-            updateProgress();
-        }
-
-        function selectOptionB(qId, boolVal) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
-            appState.userAnswersB[qId] = boolVal;
-
-            const trueBtn = document.getElementById(`btn-${qId}-true`);
-            const falseBtn = document.getElementById(`btn-${qId}-false`);
-
-            trueBtn.classList.remove('selected');
-            falseBtn.classList.remove('selected');
-
-            if (boolVal) trueBtn.classList.add('selected');
-            else falseBtn.classList.add('selected');
-
-            updateProgress();
-        }
-
-        function setActiveInputC(qId) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
-            appState.activeInputCId = qId;
-        }
-
-        function clickWordBank(word) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
-            let targetId = appState.activeInputCId;
-            
-            // If none focused, find first empty
-            if (!targetId) {
-                const empty = questionBankC.find(q => !appState.userAnswersC[q.id]);
-                if (empty) targetId = empty.id;
-                else targetId = questionBankC[0].id;
-            }
-
-            const inputElem = document.getElementById(`input-${targetId}`);
-            if (inputElem) {
-                inputElem.value = word;
-                updateAnswerC(targetId, word);
-            }
-        }
-
-        function updateAnswerC(qId, val) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
-            appState.userAnswersC[qId] = val.trim();
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const countA = Object.keys(appState.userAnswersA).length;
-            const countB = Object.keys(appState.userAnswersB).length;
-            const countC = Object.keys(appState.userAnswersC).filter(k => appState.userAnswersC[k] !== '').length;
-
-            const total = countA + countB + countC;
-            const pct = Math.round((total / 30) * 100);
-
-            document.getElementById('progressBar').style.width = `${pct}%`;
-            document.getElementById('progressPercent').innerText = `${pct}%`;
-            document.getElementById('answeredCountBadge').innerText = `Dijawab: ${total} / 30 Soalan`;
-        }
 
         function startExamSession() {
-            const nama = document.getElementById('inputNama').value.trim();
-            const ndp = document.getElementById('inputNDP').value.trim();
-            const penilaian = document.getElementById('inputPenilaian').value;
+            const name = document.getElementById('studentName').value.trim();
+            const id = document.getElementById('studentId').value.trim();
 
-            if (!nama || !ndp) {
-                alert('Sila lengkapkan Nama dan No. KP/NDP sebelum memulakan tugasan.');
+            if (!name || !id) {
+                showToast("⚠️ Sila isi Nama Pelajar dan No. KP / NDP sebelum memulakan tugasan!", "amber");
                 return;
             }
 
-            appState.studentName = nama.toUpperCase();
-            appState.studentNDP = ndp.toUpperCase();
-            appState.penilaianType = penilaian;
-            appState.isExamStarted = true;
-            appState.startTime = new Date();
-            appState.sessionId = `ABS-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000 + Math.random() * 9000)}`;
+            // Generate Session ID
+            const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
+            const randomHex = Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6,'0');
+            sessionState.sessionId = `ABS-${dateStr}-${randomHex}`;
+            sessionState.startTime = new Date();
+            sessionState.active = true;
 
-            // Dynamic Watermark setup
-            setupWatermark();
+            // Prepare Questions Order (Shuffle)
+            activeQuestionsA = shuffleArray(RAW_MCQ).map(q => {
+                // Shuffle Options for MCQ
+                const optionsWithOrigIdx = q.options.map((opt, idx) => ({ text: opt, isCorrect: idx === q.answer }));
+                const shuffledOpts = shuffleArray(optionsWithOrigIdx);
+                const newCorrectIdx = shuffledOpts.findIndex(o => o.isCorrect);
+                return {
+                    ...q,
+                    shuffledOptions: shuffledOpts.map(o => o.text),
+                    shuffledCorrectIdx: newCorrectIdx
+                };
+            });
 
-            // Unlock worksheet area
-            const area = document.getElementById('worksheetArea');
-            area.classList.remove('opacity-50', 'pointer-events-none');
+            activeQuestionsB = shuffleArray([...RAW_TF]);
+            activeQuestionsC = shuffleArray([...RAW_FILL]);
 
-            // Hide start form input state
-            document.getElementById('inputNama').disabled = true;
-            document.getElementById('inputNDP').disabled = true;
-            document.getElementById('inputPenilaian').disabled = true;
-            document.getElementById('btnStartExam').disabled = true;
-            document.getElementById('btnStartExam').innerHTML = '✅ TUGASAN SEDANG BERJALAN';
-            document.getElementById('btnStartExam').classList.replace('bg-indigo-600', 'bg-slate-400');
+            // Render UI
+            renderAllQuestions();
+            setupWatermark(name, id);
 
-            // Show progress bar container
-            document.getElementById('stickyProgressContainer').classList.remove('hidden');
+            // Enable Exam Mode UI
+            document.getElementById('questionsWrapper').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('progressSection').classList.remove('hidden');
+            document.getElementById('studentName').disabled = true;
+            document.getElementById('studentId').disabled = true;
+            document.getElementById('assessmentFrequency').disabled = true;
+            document.getElementById('startExamBar').classList.add('hidden');
+            document.getElementById('btnSubmitWorksheet').disabled = false;
+
+            document.getElementById('sessionStatusBadge').className = "bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300";
+            document.getElementById('sessionStatusBadge').innerHTML = "🔒 MOD TUGASAN AKTIF";
 
             // Start Timer
-            appState.timeRemainingSeconds = (teacherConfig.timerMinutes || 30) * 60;
+            sessionState.remainingSeconds = teacherConfig.timerMinutes * 60;
             startTimer();
 
-            alert(`Tugasan Diberdayakan! Sesi ID: ${appState.sessionId}\nSelamat Menjawab!`);
-        }
-
-        function setupWatermark() {
-            const container = document.getElementById('watermark-overlay');
-            const text = `${appState.studentName} | ${appState.studentNDP} | `;
-            container.innerHTML = text.repeat(30);
+            showToast("🔒 Mod Tugasan Aktif! Selamat menjawab.", "emerald");
         }
 
         function startTimer() {
             updateTimerDisplay();
-            appState.timerInterval = setInterval(() => {
-                appState.timeRemainingSeconds--;
-                if (appState.timeRemainingSeconds <= 0) {
-                    clearInterval(appState.timerInterval);
-                    alert('⏰ Masa telah tamat! Jawapan anda akan disemak secara automatik.');
-                    submitWorksheet(true);
+            sessionState.timerInterval = setInterval(() => {
+                if (sessionState.remainingSeconds <= 0) {
+                    clearInterval(sessionState.timerInterval);
+                    showToast("⏰ Masa telah tamat! Jawapan anda akan disemak secara automatik.", "rose");
+                    submitWorksheet(true); // Auto submit on timeout
                 } else {
+                    sessionState.remainingSeconds--;
                     updateTimerDisplay();
                 }
             }, 1000);
         }
 
         function updateTimerDisplay() {
-            const m = Math.floor(appState.timeRemainingSeconds / 60);
-            const s = appState.timeRemainingSeconds % 60;
-            const formatted = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            document.getElementById('timerDisplay').innerText = `⏱️ MASA: ${formatted}`;
+            const m = Math.floor(sessionState.remainingSeconds / 60);
+            const s = sessionState.remainingSeconds % 60;
+            document.getElementById('timerDisplay').innerText = 
+                `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
-        function setupAntiCheatListeners() {
-            // Tab Switch Detection
-            document.addEventListener('visibilitychange', () => {
-                if (appState.isExamStarted && !appState.isSubmitted && document.hidden) {
-                    appState.integrityLog.tabExits++;
-                    triggerAntiCheatWarning('Aktiviti keluar tab atau meminimumkan browser dikesan.');
-                }
-            });
 
-            // Prevent Copy / Cut / Paste / Context menu on worksheet
-            const wsArea = document.getElementById('worksheetArea');
-            ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
-                wsArea.addEventListener(evt, (e) => {
-                    if (appState.isExamStarted && !appState.isSubmitted) {
-                        e.preventDefault();
-                        if (evt === 'copy' || evt === 'cut') appState.integrityLog.copyAttempts++;
-                        if (evt === 'paste') appState.integrityLog.pasteAttempts++;
-                        triggerAntiCheatWarning(`Fungsi ${evt} dinyahaktifkan semasa tugasan.`);
+        function renderAllQuestions() {
+            // Render MCQ
+            const mcqBox = document.getElementById('mcqContainer');
+            mcqBox.innerHTML = activeQuestionsA.map((q, idx) => `
+                <div class="kawaii-card p-5 space-y-3" id="card_${q.id}">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex gap-3">
+                            <span class="bg-blue-100 text-blue-700 text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                ${idx + 1}
+                            </span>
+                            <p class="text-sm font-bold text-slate-800 leading-relaxed">${escapeHtml(q.question)}</p>
+                        </div>
+                        <span id="badge_${q.id}" class="hidden text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                        ${q.shuffledOptions.map((opt, oIdx) => {
+                            const letter = String.fromCharCode(65 + oIdx);
+                            return `
+                                <button type="button" 
+                                        onclick="selectMcqAnswer('${q.id}', ${oIdx})" 
+                                        id="opt_${q.id}_${oIdx}"
+                                        class="option-btn p-3 rounded-xl text-left text-xs font-semibold text-slate-700 flex items-center gap-3">
+                                    <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs shrink-0">
+                                        ${letter}
+                                    </span>
+                                    <span>${escapeHtml(opt)}</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- Post Review Feedback Box -->
+                    <div id="feedback_${q.id}" class="hidden pt-3 border-t text-xs space-y-1"></div>
+                </div>
+            `).join('');
+
+            // Render True / False
+            const tfBox = document.getElementById('tfContainer');
+            tfBox.innerHTML = activeQuestionsB.map((q, idx) => `
+                <div class="kawaii-card p-5 space-y-3" id="card_${q.id}">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex gap-3">
+                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                ${idx + 21}
+                            </span>
+                            <p class="text-sm font-bold text-slate-800 leading-relaxed">${escapeHtml(q.question)}</p>
+                        </div>
+                        <span id="badge_${q.id}" class="hidden text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <button type="button" onclick="selectTfAnswer('${q.id}', 'BENAR')" id="opt_${q.id}_BENAR"
+                                class="option-btn p-3 rounded-xl text-center text-xs font-bold text-emerald-700 hover:bg-emerald-50">
+                            <i class="fa-solid fa-circle-check mr-1 text-emerald-500"></i> BENAR
+                        </button>
+                        <button type="button" onclick="selectTfAnswer('${q.id}', 'SALAH')" id="opt_${q.id}_SALAH"
+                                class="option-btn p-3 rounded-xl text-center text-xs font-bold text-rose-700 hover:bg-rose-50">
+                            <i class="fa-solid fa-circle-xmark mr-1 text-rose-500"></i> SALAH
+                        </button>
+                    </div>
+
+                    <div id="feedback_${q.id}" class="hidden pt-3 border-t text-xs space-y-1"></div>
+                </div>
+            `).join('');
+
+            // Render Fill in Blanks
+            const fillBox = document.getElementById('fillContainer');
+            fillBox.innerHTML = activeQuestionsC.map((q, idx) => `
+                <div class="kawaii-card p-5 space-y-3" id="card_${q.id}">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex gap-3">
+                            <span class="bg-purple-100 text-purple-700 text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                ${idx + 26}
+                            </span>
+                            <div class="text-sm font-bold text-slate-800 leading-relaxed">
+                                ${escapeHtml(q.question).replace('____________', `
+                                    <input type="text" id="input_${q.id}" 
+                                           onfocus="setActiveFillInput('${q.id}')"
+                                           oninput="handleFillInputManual('${q.id}')"
+                                           placeholder="[ Isikan jawapan ]" 
+                                           class="inline-block px-3 py-1 border-2 border-purple-300 focus:border-purple-500 focus:outline-none rounded-lg text-purple-900 font-bold text-center bg-purple-50 text-xs mx-1 my-0.5">
+                                `)}
+                            </div>
+                        </div>
+                        <span id="badge_${q.id}" class="hidden text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    </div>
+
+                    <div id="feedback_${q.id}" class="hidden pt-3 border-t text-xs space-y-1"></div>
+                </div>
+            `).join('');
+
+            updateProgress();
+        }
+
+
+        function setupWordBankUI() {
+            const words = ["variator", "rantai khas", "Stall test", "TCM", "VIN"];
+            const bankContainer = document.getElementById('wordBankChips');
+            
+            bankContainer.innerHTML = words.map(word => `
+                <button type="button" onclick="clickWordChip('${word}')" id="chip_${word}"
+                        class="word-chip bg-white border-2 border-purple-300 hover:border-purple-500 text-purple-900 font-bold px-3 py-1.5 rounded-xl shadow-sm text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-tag text-purple-400"></i> ${word}
+                </button>
+            `).join('');
+        }
+
+        function setActiveFillInput(qId) {
+            sessionState.activeInputFillId = qId;
+        }
+
+        function clickWordChip(word) {
+            if (sessionState.submitted) return;
+
+            if (!sessionState.activeInputFillId) {
+                // If no active input, pick the first empty fill input
+                const emptyQuestion = activeQuestionsC.find(q => !studentAnswers.fill[q.id]);
+                if (emptyQuestion) {
+                    sessionState.activeInputFillId = emptyQuestion.id;
+                } else {
+                    showToast("Sila klik pada petak jawapan Bahagian C terlebih dahulu.", "indigo");
+                    return;
+                }
+            }
+
+            const qId = sessionState.activeInputFillId;
+            const inputEl = document.getElementById(`input_${qId}`);
+            if (inputEl) {
+                inputEl.value = word;
+                studentAnswers.fill[qId] = word.trim();
+                updateProgress();
+            }
+        }
+
+        function handleFillInputManual(qId) {
+            const inputEl = document.getElementById(`input_${qId}`);
+            if (inputEl) {
+                studentAnswers.fill[qId] = inputEl.value.trim();
+                updateProgress();
+            }
+        }
+
+
+        function selectMcqAnswer(qId, optionIdx) {
+            if (sessionState.submitted) return;
+
+            studentAnswers.mcq[qId] = optionIdx;
+            const q = activeQuestionsA.find(item => item.id === qId);
+
+            // Highlight selected card button
+            q.shuffledOptions.forEach((_, idx) => {
+                const btn = document.getElementById(`opt_${qId}_${idx}`);
+                if (btn) {
+                    if (idx === optionIdx) {
+                        btn.classList.add('selected');
+                    } else {
+                        btn.classList.remove('selected');
                     }
-                });
-            });
-
-            // Prevent Keyboard Shortcuts
-            window.addEventListener('keydown', (e) => {
-                if (!appState.isExamStarted || appState.isSubmitted) return;
-
-                if ((e.ctrlKey || e.metaKey) && ['c','v','x','u','s','p','a'].includes(e.key.toLowerCase())) {
-                    e.preventDefault();
-                    appState.integrityLog.shortcuts++;
-                    triggerAntiCheatWarning(`Shortcut Ctrl+${e.key.toUpperCase()} tidak dibenarkan.`);
-                }
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase()))) {
-                    e.preventDefault();
-                    appState.integrityLog.shortcuts++;
-                    triggerAntiCheatWarning('Akses Developer Tools dihadkan.');
                 }
             });
 
-            // Reload protection
-            window.addEventListener('beforeunload', (e) => {
-                if (appState.isExamStarted && !appState.isSubmitted) {
-                    e.preventDefault();
-                    e.returnValue = 'Anda sedang menjalankan tugasan. Memuatkan semula halaman mungkin menjejaskan sesi anda.';
-                }
-            });
+            updateProgress();
         }
 
-        function triggerAntiCheatWarning(msg) {
-            appState.warningCount++;
-            const banner = document.getElementById('antiCheatBanner');
-            const countText = document.getElementById('warningCountText');
-            const detailText = document.getElementById('warningDetailText');
+        function selectTfAnswer(qId, val) {
+            if (sessionState.submitted) return;
 
-            banner.classList.remove('hidden');
-            countText.innerText = Math.min(appState.warningCount, 3);
-            detailText.innerText = `${msg} (Amaran ${Math.min(appState.warningCount, 3)}/3)`;
+            studentAnswers.tf[qId] = val;
 
-            if (appState.warningCount >= 3) {
-                banner.classList.replace('bg-amber-50', 'bg-red-50');
-                banner.classList.replace('border-amber-300', 'border-red-400');
-                banner.classList.replace('text-amber-900', 'text-red-900');
-            }
-        }
+            const btnBenar = document.getElementById(`opt_${qId}_BENAR`);
+            const btnSalah = document.getElementById(`opt_${qId}_SALAH`);
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
+            if (val === 'BENAR') {
+                btnBenar?.classList.add('selected');
+                btnSalah?.classList.remove('selected');
             } else {
-                if (document.exitFullscreen) document.exitFullscreen();
+                btnSalah?.classList.add('selected');
+                btnBenar?.classList.remove('selected');
             }
+
+            updateProgress();
         }
 
-        function submitWorksheet(forceSubmit = false) {
-            if (!appState.isExamStarted || appState.isSubmitted) return;
+        function updateProgress() {
+            const countA = Object.keys(studentAnswers.mcq).length;
+            const countB = Object.keys(studentAnswers.tf).length;
+            const countC = Object.keys(studentAnswers.fill).filter(k => studentAnswers.fill[k] !== "").length;
 
-            // Check if all answered
-            const countA = Object.keys(appState.userAnswersA).length;
-            const countB = Object.keys(appState.userAnswersB).length;
-            const countC = Object.keys(appState.userAnswersC).filter(k => appState.userAnswersC[k] !== '').length;
             const totalAnswered = countA + countB + countC;
+            const percent = Math.round((totalAnswered / 30) * 100);
 
-            if (!forceSubmit && totalAnswered < 30) {
-                const valMsg = document.getElementById('validationMessage');
-                valMsg.classList.remove('hidden');
-                valMsg.innerText = `⚠️ Sila lengkapkan semua soalan! (Baru dijawab: ${totalAnswered} / 30)`;
-                valMsg.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('answeredCount').innerText = totalAnswered;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+        }
+
+
+        function submitWorksheet(isAuto = false) {
+            if (sessionState.submitted) return;
+
+            // Check if all questions are answered
+            const unanswered = [];
+            activeQuestionsA.forEach((q, idx) => {
+                if (studentAnswers.mcq[q.id] === undefined) unanswered.push(`Soalan ${idx + 1} (A)`);
+            });
+            activeQuestionsB.forEach((q, idx) => {
+                if (!studentAnswers.tf[q.id]) unanswered.push(`Soalan ${idx + 21} (B)`);
+            });
+            activeQuestionsC.forEach((q, idx) => {
+                if (!studentAnswers.fill[q.id]) unanswered.push(`Soalan ${idx + 26} (C)`);
+            });
+
+            if (!isAuto && unanswered.length > 0) {
+                showToast(`Sila lengkapkan semua soalan! Terdapat ${unanswered.length} soalan belum dijawab.`, "amber");
                 return;
             }
 
-            // Lock session
-            appState.isSubmitted = true;
-            appState.endTime = new Date();
-            if (appState.timerInterval) clearInterval(appState.timerInterval);
+            // Lock Session
+            sessionState.submitted = true;
+            sessionState.endTime = new Date();
+            clearInterval(sessionState.timerInterval);
 
-            // Hide validation message
-            document.getElementById('validationMessage').classList.add('hidden');
+            // Stop Anti-cheat timer & lock controls
+            document.getElementById('btnSubmitWorksheet').disabled = true;
+            document.getElementById('btnSubmitWorksheet').innerHTML = `<i class="fa-solid fa-lock mr-2"></i> JAWAPAN TELAH DISEMAK`;
+            document.getElementById('btnSubmitWorksheet').className = "w-full md:w-auto bg-slate-400 text-white font-bold text-base px-10 py-4 rounded-2xl cursor-not-allowed";
 
-            // Calculate Score
-            let correctCount = 0;
+            // Lock inputs
+            document.querySelectorAll('input, button.option-btn').forEach(el => el.disabled = true);
 
-            // Check A
-            questionBankA.forEach(q => {
-                const uAns = appState.userAnswersA[q.id];
-                const isCorrect = (uAns === q.correct);
-                if (isCorrect) correctCount++;
-                showFeedbackA(q, uAns, isCorrect);
+            // Calculate Marks
+            let scoreA = 0;
+            let scoreB = 0;
+            let scoreC = 0;
+
+            // Evaluate Section A
+            activeQuestionsA.forEach((q) => {
+                const userChoice = studentAnswers.mcq[q.id];
+                const isCorrect = userChoice === q.shuffledCorrectIdx;
+                if (isCorrect) scoreA++;
+
+                // Highlight correct and wrong options
+                q.shuffledOptions.forEach((_, idx) => {
+                    const btn = document.getElementById(`opt_${q.id}_${idx}`);
+                    if (idx === q.shuffledCorrectIdx) {
+                        btn.classList.add('correct-highlight');
+                    } else if (idx === userChoice && !isCorrect) {
+                        btn.classList.add('wrong-highlight');
+                    }
+                });
+
+                showQuestionFeedback(q.id, isCorrect, 
+                    userChoice !== undefined ? `${String.fromCharCode(65 + userChoice)}. ${q.shuffledOptions[userChoice]}` : "Tiada Jawapan",
+                    `${String.fromCharCode(65 + q.shuffledCorrectIdx)}. ${q.shuffledOptions[q.shuffledCorrectIdx]}`,
+                    q.explanation
+                );
             });
 
-            // Check B
-            questionBankB.forEach(q => {
-                const uAns = appState.userAnswersB[q.id];
-                const isCorrect = (uAns === q.correct);
-                if (isCorrect) correctCount++;
-                showFeedbackB(q, uAns, isCorrect);
+            // Evaluate Section B
+            activeQuestionsB.forEach((q) => {
+                const userChoice = studentAnswers.tf[q.id];
+                const isCorrect = userChoice === q.answer;
+                if (isCorrect) scoreB++;
+
+                const btnBenar = document.getElementById(`opt_${q.id}_BENAR`);
+                const btnSalah = document.getElementById(`opt_${q.id}_SALAH`);
+
+                if (q.answer === 'BENAR') btnBenar?.classList.add('correct-highlight');
+                else btnSalah?.classList.add('correct-highlight');
+
+                if (userChoice && userChoice !== q.answer) {
+                    if (userChoice === 'BENAR') btnBenar?.classList.add('wrong-highlight');
+                    else btnSalah?.classList.add('wrong-highlight');
+                }
+
+                showQuestionFeedback(q.id, isCorrect, userChoice || "Tiada Jawapan", q.answer, q.explanation);
             });
 
-            // Check C
-            questionBankC.forEach(q => {
-                const uAns = (appState.userAnswersC[q.id] || '').toLowerCase().trim();
-                const isCorrect = (uAns === q.answer.toLowerCase().trim());
-                if (isCorrect) correctCount++;
-                showFeedbackC(q, appState.userAnswersC[q.id] || '', isCorrect);
+            // Evaluate Section C
+            activeQuestionsC.forEach((q) => {
+                const userVal = (studentAnswers.fill[q.id] || "").trim().toLowerCase();
+                const correctVal = q.answer.trim().toLowerCase();
+                const isCorrect = userVal === correctVal;
+                if (isCorrect) scoreC++;
+
+                const inputEl = document.getElementById(`input_${q.id}`);
+                if (inputEl) {
+                    if (isCorrect) {
+                        inputEl.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+                    } else {
+                        inputEl.classList.add('bg-rose-100', 'border-rose-500', 'text-rose-800');
+                    }
+                }
+
+                showQuestionFeedback(q.id, isCorrect, studentAnswers.fill[q.id] || "Tiada Jawapan", q.answer, q.explanation);
             });
 
-            appState.score = correctCount;
-            appState.percentage = Math.round((correctCount / 30) * 100);
-            appState.isTrampil = (correctCount >= teacherConfig.passThreshold);
+            const totalScore = scoreA + scoreB + scoreC;
+            const percentage = Math.round((totalScore / 30) * 100);
 
-            // Display Results Overview
-            displayResultsCard();
+            // Display Results
+            displayFinalResults(totalScore, percentage);
 
-            // Lock Submit Button
-            const btnSub = document.getElementById('btnSubmitWorksheet');
-            btnSub.disabled = true;
-            btnSub.innerText = '🔒 JAWAPAN TELAH DISEMAK & DIKUNCI';
-            btnSub.classList.replace('from-indigo-600', 'from-slate-500');
-            btnSub.classList.replace('to-purple-600', 'to-slate-600');
+            // Save session to localStorage
+            saveSessionToLocalStorage(totalScore, percentage);
+        }
 
-            // Lock Inputs
-            document.querySelectorAll('button.option-btn, input').forEach(el => {
-                el.disabled = true;
-            });
+        function showQuestionFeedback(qId, isCorrect, userAns, correctAns, exp) {
+            const badge = document.getElementById(`badge_${qId}`);
+            if (badge) {
+                badge.classList.remove('hidden');
+                if (isCorrect) {
+                    badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                    badge.innerHTML = "✔️ BETUL";
+                } else {
+                    badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-rose-100 text-rose-800 border border-rose-300";
+                    badge.innerHTML = "❌ SALAH";
+                }
+            }
 
-            // Scroll to results
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            const feedbackBox = document.getElementById(`feedback_${qId}`);
+            if (feedbackBox) {
+                feedbackBox.classList.remove('hidden');
+                feedbackBox.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                        <div><strong>Jawapan Anda:</strong> <span class="${isCorrect ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}">${escapeHtml(userAns)}</span></div>
+                        <div><strong>Jawapan Betul:</strong> <span class="text-emerald-700 font-bold">${escapeHtml(correctAns)}</span></div>
+                    </div>
+                    <div class="text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-200 mt-1">
+                        <strong>Penerangan:</strong> ${escapeHtml(exp)}
+                    </div>
+                `;
+            }
+        }
 
-            // Confetti if score high
-            if (appState.score >= 24 && window.confetti) {
-                window.confetti({
-                    particleCount: 100,
-                    spread: 70,
+
+        function displayFinalResults(score, percentage) {
+            const resultsCard = document.getElementById('resultsCard');
+            resultsCard.classList.remove('hidden');
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+
+            document.getElementById('scoreFraction').innerText = `${score} / 30`;
+            document.getElementById('scorePercentage').innerText = `${percentage}%`;
+
+            const name = document.getElementById('studentName').value.trim();
+            const id = document.getElementById('studentId').value.trim();
+            const freq = document.getElementById('assessmentFrequency').value;
+
+            document.getElementById('resStudentName').innerText = name;
+            document.getElementById('resStudentId').innerText = id;
+            document.getElementById('resSessionId').innerText = sessionState.sessionId;
+            document.getElementById('resFrequency').innerText = freq;
+            document.getElementById('reviewTimestamp').innerText = formatDate(sessionState.endTime);
+
+            // Status Sticker
+            const isTrampil = score >= teacherConfig.trampilMin;
+            const stickerContainer = document.getElementById('statusStickerContainer');
+            const teacherStamp = document.getElementById('teacherStamp');
+
+            if (isTrampil) {
+                stickerContainer.innerHTML = `
+                    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-extrabold text-lg px-6 py-2 rounded-2xl shadow-lg border-2 border-emerald-300 flex items-center gap-2 transform -rotate-1 animate-bounce">
+                        🌟 TRAMPIL
+                    </div>
+                `;
+                teacherStamp.className = "stamp-box stamp-trampil text-center";
+            } else {
+                stickerContainer.innerHTML = `
+                    <div class="bg-gradient-to-r from-rose-500 to-red-500 text-white font-extrabold text-lg px-6 py-2 rounded-2xl shadow-lg border-2 border-rose-300 flex items-center gap-2 transform rotate-1">
+                        ⚠️ BELUM TRAMPIL
+                    </div>
+                `;
+                teacherStamp.className = "stamp-box stamp-belum text-center";
+            }
+
+            document.getElementById('stampEvaluatorName').innerText = teacherConfig.evaluatorName;
+
+            // Render Anti-Cheat Summary
+            const integrityBox = document.getElementById('integrityLogCard');
+            const hasSuspicious = (antiCheatLog.tabSwitches > 0 || antiCheatLog.copyAttempts > 0 || antiCheatLog.keyboardShortcutAttempts > 0);
+
+            integrityBox.innerHTML = `
+                <div class="p-2 rounded-lg ${hasSuspicious ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'} col-span-2 font-bold">
+                    Status: ${hasSuspicious ? '🟠 AKTIVITI BROWSER DIKESAN' : '🟢 TIADA AKTIVITI MENCURIGAKAN DIKESAN'}
+                </div>
+                <div>Keluar Tab: <strong>${antiCheatLog.tabSwitches} kali</strong></div>
+                <div>Copy/Paste: <strong>${antiCheatLog.copyAttempts + antiCheatLog.pasteAttempts} kali</strong></div>
+            `;
+
+            // Enable PDF & Classroom Buttons
+            document.getElementById('postSubmitToolbar').classList.remove('hidden');
+
+            // Trigger Confetti if Score >= 24 (or 80%)
+            if (score >= 24 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
                     origin: { y: 0.6 }
                 });
             }
         }
 
-        function showFeedbackA(q, uAns, isCorrect) {
-            const fb = document.getElementById(`feedback-${q.id}`);
-            fb.classList.remove('hidden');
 
-            const uText = uAns !== undefined ? `${String.fromCharCode(65 + uAns)}. ${q.options[uAns]}` : 'Tiada Jawapan';
-            const cText = `${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}`;
+        function setupAntiCheatListeners() {
+            // Tab switch / Window focus loss
+            document.addEventListener('visibilitychange', () => {
+                if (sessionState.active && !sessionState.submitted) {
+                    if (document.hidden) {
+                        antiCheatLog.tabSwitches++;
+                        handleAntiCheatViolation("Aktiviti keluar halaman / tab dikesan!");
+                    }
+                }
+            });
 
-            if (isCorrect) {
-                fb.className = "mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs";
-                fb.innerHTML = `<strong>✔️ BETUL!</strong><br><span class="text-[11px] text-emerald-700">${q.explanation}</span>`;
-            } else {
-                fb.className = "mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs";
-                fb.innerHTML = `
-                    <strong>❌ SALAH</strong><br>
-                    <span>Jawapan anda: <i>${uText}</i></span><br>
-                    <span class="font-bold text-emerald-700">Jawapan betul: ${cText}</span><br>
-                    <span class="text-[11px] text-slate-600 mt-1 block">Penerangan: ${q.explanation}</span>
-                `;
-            }
-        }
+            window.addEventListener('blur', () => {
+                if (sessionState.active && !sessionState.submitted) {
+                    antiCheatLog.tabSwitches++;
+                }
+            });
 
-        function showFeedbackB(q, uAns, isCorrect) {
-            const fb = document.getElementById(`feedback-${q.id}`);
-            fb.classList.remove('hidden');
-
-            const uText = uAns !== undefined ? (uAns ? 'BENAR' : 'SALAH') : 'Tiada Jawapan';
-            const cText = q.correct ? 'BENAR' : 'SALAH';
-
-            if (isCorrect) {
-                fb.className = "mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs";
-                fb.innerHTML = `<strong>✔️ BETUL!</strong><br><span class="text-[11px] text-emerald-700">${q.explanation}</span>`;
-            } else {
-                fb.className = "mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs";
-                fb.innerHTML = `
-                    <strong>❌ SALAH</strong><br>
-                    <span>Jawapan anda: <i>${uText}</i></span><br>
-                    <span class="font-bold text-emerald-700">Jawapan betul: ${cText}</span><br>
-                    <span class="text-[11px] text-slate-600 mt-1 block">Penerangan: ${q.explanation}</span>
-                `;
-            }
-        }
-
-        function showFeedbackC(q, uAns, isCorrect) {
-            const fb = document.getElementById(`feedback-${q.id}`);
-            fb.classList.remove('hidden');
-
-            if (isCorrect) {
-                fb.className = "mt-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs";
-                fb.innerHTML = `<strong>✔️ BETUL!</strong><br><span class="text-[11px] text-emerald-700">${q.explanation}</span>`;
-            } else {
-                fb.className = "mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs";
-                fb.innerHTML = `
-                    <strong>❌ SALAH</strong><br>
-                    <span>Jawapan anda: <i>${uAns || 'Tiada'}</i></span><br>
-                    <span class="font-bold text-emerald-700">Jawapan betul: "${q.answer}"</span><br>
-                    <span class="text-[11px] text-slate-600 mt-1 block">Penerangan: ${q.explanation}</span>
-                `;
-            }
-        }
-
-        function displayResultsCard() {
-            const resultsSec = document.getElementById('resultsSection');
-            resultsSec.classList.remove('hidden');
-
-            // Handwritten Score
-            document.getElementById('scoreHandwritten').innerText = `${appState.score} / 30`;
-            document.getElementById('scorePercentText').innerText = `Peratusan: ${appState.percentage}%`;
-
-            // Dynamic Sticker
-            const stickerBox = document.getElementById('achievementStickerContainer');
-            if (appState.isTrampil) {
-                stickerBox.innerHTML = `
-                    <div class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-900 border-2 border-emerald-400 px-6 py-2.5 rounded-2xl font-kawaii font-bold text-lg shadow-md animate-pulse-soft">
-                        🌟 TRAMPIL 🌟
-                    </div>
-                `;
-            } else {
-                stickerBox.innerHTML = `
-                    <div class="inline-flex items-center gap-2 bg-gradient-to-r from-rose-100 to-pink-100 text-rose-900 border-2 border-rose-300 px-6 py-2.5 rounded-2xl font-kawaii font-bold text-base shadow-sm">
-                        ⚠️ BELUM TRAMPIL
-                    </div>
-                `;
-            }
-
-            // Stamp Penilai
-            const stampBox = document.getElementById('digitalStampBox');
-            document.getElementById('stampEvaluatorName').innerText = `PEGAWAI PENILAI: ${teacherConfig.evaluatorName}`;
+            // Copy, Cut, Paste, Context Menu Prevention
+            const target = document.getElementById('questionsWrapper');
             
-            if (appState.isTrampil) {
-                stampBox.className = "stamp-box stamp-trampil text-center";
-                document.getElementById('stampStatusText').innerText = "STATUS: TRAMPIL";
-            } else {
-                stampBox.className = "stamp-box stamp-belum text-center";
-                document.getElementById('stampStatusText').innerText = "STATUS: BELUM TRAMPIL";
-            }
+            ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
+                target.addEventListener(evt, (e) => {
+                    if (sessionState.active && !sessionState.submitted) {
+                        e.preventDefault();
+                        if (evt === 'copy') antiCheatLog.copyAttempts++;
+                        if (evt === 'paste') antiCheatLog.pasteAttempts++;
+                        if (evt === 'contextmenu') antiCheatLog.contextMenuAttempts++;
+                        showToast(`⚠️ Fungsi ${evt} dinyahaktifkan semasa tugasan!`, "amber");
+                    }
+                });
+            });
 
-            // Timestamp
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const timeStr = now.toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit', hour12: true });
-            document.getElementById('timestampText').innerText = `Tarikh Semakan: ${dateStr} | Masa Semakan: ${timeStr}`;
+            // Keyboard Shortcuts Monitor
+            document.addEventListener('keydown', (e) => {
+                if (sessionState.active && !sessionState.submitted) {
+                    // Prevent Ctrl+C, Ctrl+V, Ctrl+U, F12, Ctrl+Shift+I
+                    if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
+                        e.preventDefault();
+                        antiCheatLog.keyboardShortcutAttempts++;
+                        showToast("⚠️ Pintasan papan kekunci tidak dibenarkan!", "amber");
+                    }
+                    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase()))) {
+                        e.preventDefault();
+                        antiCheatLog.keyboardShortcutAttempts++;
+                        showToast("⚠️ Akses pemeriksaan elemen dihalang!", "amber");
+                    }
+                }
+            });
 
-            // Integrity Log
-            const elapsedMins = Math.round((appState.endTime - appState.startTime) / 60000) || 1;
-            const hasSuspicious = (appState.integrityLog.tabExits > 0 || appState.integrityLog.copyAttempts > 0);
-            
-            document.getElementById('integrityDetails').innerHTML = `
-                <div>Status: <span class="font-bold ${hasSuspicious ? 'text-amber-600' : 'text-emerald-600'}">${hasSuspicious ? '🟠 AKTIVITI BROWSER DIKESAN' : '🟢 TIADA AKTIVITI MENCURIGAKAN'}</span></div>
-                <div>Keluar Halaman: <span class="font-bold">${appState.integrityLog.tabExits} kali</span></div>
-                <div>Salin / Tampal: <span class="font-bold">${appState.integrityLog.copyAttempts + appState.integrityLog.pasteAttempts} kali</span></div>
-                <div>Masa Dijawab: <span class="font-bold">${elapsedMins} minit</span></div>
-            `;
+            // Refresh Reload Confirmation
+            window.addEventListener('beforeunload', (e) => {
+                if (sessionState.active && !sessionState.submitted) {
+                    e.preventDefault();
+                    e.returnValue = 'Anda sedang dalam tugasan. Memuatkan semula halaman mungkin menjejaskan sesi anda!';
+                }
+            });
         }
 
-        async function exportToPDF() {
-            if (!appState.isSubmitted) return;
+        function handleAntiCheatViolation(msg) {
+            antiCheatLog.warningsShown++;
+            const count = antiCheatLog.warningsShown;
 
-            const btn = document.getElementById('btnDownloadPDF');
-            btn.innerText = '⌛ Menjana PDF...';
-            btn.disabled = true;
+            if (count === 1) {
+                showToast(`⚠️ Amaran 1/3 — ${msg} Sila kekal pada halaman tugasan.`, "amber");
+            } else if (count === 2) {
+                showToast(`⚠️ Amaran 2/3 — Aktiviti keluar halaman dikesan!`, "amber");
+            } else {
+                showToast(`🚨 Amaran 3/3 — Had amaran telah dicapai. Aktiviti direkodkan.`, "rose");
+            }
+        }
 
+        function setupWatermark(name, id) {
+            const container = document.getElementById('watermarkContainer');
+            container.innerHTML = '';
+            const text = `${name.toUpperCase()} | ${id.toUpperCase()}`;
+            
+            for (let i = 0; i < 18; i++) {
+                const el = document.createElement('div');
+                el.innerText = text;
+                el.style.transform = `rotate(-${15 + (i % 3) * 5}deg)`;
+                container.appendChild(el);
+            }
+        }
+
+
+        async function generatePDF() {
+            showToast("⏳ Menjana fail PDF A4, sila tunggu...", "indigo");
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+
+            // Temporarily optimize elements for capture
+            const element = document.body;
+            
             try {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                // Clone body area for clean PDF render
-                const element = document.body;
                 const canvas = await html2canvas(element, {
                     scale: 1.5,
                     useCORS: true,
                     logging: false,
-                    windowWidth: 1024
+                    windowWidth: 1200
                 });
 
                 const imgData = canvas.toDataURL('image/jpeg', 0.85);
-                const imgWidth = 210; // A4 width mm
-                const pageHeight = 297; // A4 height mm
+                const imgWidth = pageWidth;
+                const pageHeight = pdf.internal.pageSize.getHeight();
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 0;
@@ -1421,21 +1424,172 @@
                     heightLeft -= pageHeight;
                 }
 
-                const cleanName = appState.studentName.replace(/[^a-zA-Z0-9]/g, '_');
-                const cleanKP = appState.studentNDP.replace(/[^a-zA-Z0-9]/g, '');
-                pdf.save(`ABS_Worksheet_${cleanName}_${cleanKP}.pdf`);
+                const cleanName = (document.getElementById('studentName').value || "Pelajar").replace(/[^a-zA-Z0-9]/g, "_");
+                const cleanId = (document.getElementById('studentId').value || "NDP").replace(/[^a-zA-Z0-9]/g, "_");
+                const fileName = `ABS_Worksheet_${cleanName}_${cleanId}.pdf`;
+
+                pdf.save(fileName);
+                showToast("✅ Muat turun PDF berjaya!", "emerald");
 
             } catch (err) {
-                alert('Gagal menjana PDF: ' + err.message);
-            } finally {
-                btn.innerText = '📄 MUAT TURUN PDF';
-                btn.disabled = false;
+                console.error(err);
+                showToast("❌ Gagal menjana PDF. Sila cuba lagi.", "rose");
             }
         }
 
-        function openGoogleClassroom() {
-            const url = teacherConfig.classroomURL || 'https://classroom.google.com';
-            window.open(url, '_blank');
+
+        function openTeacherModal() {
+            document.getElementById('cfgEvaluator').value = teacherConfig.evaluatorName;
+            document.getElementById('cfgClassroomUrl').value = teacherConfig.classroomUrl;
+            document.getElementById('cfgTrampilMin').value = teacherConfig.trampilMin;
+            document.getElementById('cfgTimerMinutes').value = teacherConfig.timerMinutes;
+            document.getElementById('modalTeacher').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('modalTeacher').classList.add('hidden');
+        }
+
+        function saveTeacherSettings() {
+            teacherConfig.evaluatorName = document.getElementById('cfgEvaluator').value.trim() || "AZRYZAN BESRI";
+            teacherConfig.classroomUrl = document.getElementById('cfgClassroomUrl').value.trim();
+            teacherConfig.trampilMin = parseInt(document.getElementById('cfgTrampilMin').value) || 18;
+            teacherConfig.timerMinutes = parseInt(document.getElementById('cfgTimerMinutes').value) || 30;
+
+            localStorage.setItem('abs_teacher_cfg', JSON.stringify(teacherConfig));
+            closeTeacherModal();
+            showToast("✅ Tetapan guru berjaya disimpan!", "emerald");
+        }
+
+        function loadTeacherConfig() {
+            const saved = localStorage.getItem('abs_teacher_cfg');
+            if (saved) {
+                try {
+                    teacherConfig = { ...teacherConfig, ...JSON.parse(saved) };
+                } catch(e){}
+            }
+        }
+
+        function openClassroomModal() {
+            const name = document.getElementById('studentName').value;
+            const id = document.getElementById('studentId').value;
+            const scoreText = document.getElementById('scoreFraction').innerText;
+
+            const payload = {
+                app: "ABS_CVT_Worksheet",
+                sessionId: sessionState.sessionId,
+                studentName: name,
+                studentId: id,
+                score: scoreText,
+                timestamp: formatDate(sessionState.endTime),
+                antiCheatLog: antiCheatLog
+            };
+
+            document.getElementById('jsonPayloadArea').value = JSON.stringify(payload, null, 2);
+            document.getElementById('modalClassroom').classList.remove('hidden');
+        }
+
+        function closeClassroomModal() {
+            document.getElementById('modalClassroom').classList.add('hidden');
+        }
+
+        function openClassroomLink() {
+            if (teacherConfig.classroomUrl) {
+                window.open(teacherConfig.classroomUrl, '_blank');
+            } else {
+                window.open('https://classroom.google.com', '_blank');
+            }
+        }
+
+        function copyJsonPayload() {
+            const txt = document.getElementById('jsonPayloadArea');
+            txt.select();
+            document.execCommand('copy');
+            showToast("📋 Data JSON telah disalin ke papan klip!", "emerald");
+        }
+
+
+        function showToast(msg, color = "indigo") {
+            const toast = document.getElementById('toastNotification');
+            const toastContent = document.getElementById('toastContent');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.innerText = msg;
+
+            const colorMap = {
+                emerald: "bg-emerald-600 border-emerald-400",
+                amber: "bg-amber-500 border-amber-300",
+                rose: "bg-rose-600 border-rose-400",
+                indigo: "bg-indigo-600 border-indigo-400"
+            };
+
+            toastContent.className = `${colorMap[color] || colorMap.indigo} text-white font-bold px-5 py-3 rounded-2xl shadow-xl flex items-center justify-between gap-3 border-2`;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                hideToast();
+            }, 4000);
+        }
+
+        function hideToast() {
+            document.getElementById('toastNotification').classList.add('hidden');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function shuffleArray(arr) {
+            const array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        function formatDate(date) {
+            if (!date) date = new Date();
+            const d = String(date.getDate()).padStart(2, '0');
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const y = date.getFullYear();
+            let hours = date.getHours();
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            return `${d}/${m}/${y} ${hours}:${minutes} ${ampm}`;
+        }
+
+        function saveSessionToLocalStorage(score, percentage) {
+            const data = {
+                studentName: document.getElementById('studentName').value,
+                studentId: document.getElementById('studentId').value,
+                frequency: document.getElementById('assessmentFrequency').value,
+                score: score,
+                percentage: percentage,
+                sessionId: sessionState.sessionId,
+                timestamp: formatDate(sessionState.endTime)
+            };
+            localStorage.setItem(`abs_session_${sessionState.sessionId}`, JSON.stringify(data));
+        }
+
+        function checkExistingSession() {
+            // Best effort check if needed
         }
     </script>
 </body>
